@@ -12,14 +12,13 @@ namespace ephidrena
 {
 
 Scheduler::Scheduler()
-    : frame_period(50)
 {
     
 }
 
 Scheduler::~Scheduler()
 {
-    
+
 }
 
 void Scheduler::EventHandler()
