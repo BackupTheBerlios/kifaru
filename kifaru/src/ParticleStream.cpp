@@ -32,12 +32,8 @@ Particle::Particle()
 	
 	trajectoryPos	= NULL;
 	
-	xPos = Rnd(0, screen->w);
-	xPos -= (screen->w/2);
-	
-	yPos = Rnd(0, screen->h);
-	yPos -= (screen->h/2);
-	
+	xPos = Rnd(0, (screen->w-1)) - (screen->w/2);
+	yPos = Rnd(0, (screen->h-1)) - (screen->h/2);
 	zPos = Rnd(0,  ZMAX);
 }
 
@@ -50,7 +46,7 @@ void Particle::Resurrect()
 {
 	xspeed		= Rnd(1,5);
 	yspeed		= Rnd(1,5);
-	zspeed		= Rnd(3,7);
+	zspeed		= Rnd(1,3);
 	xdir		= Rnd(0,1);
 	ydir		= Rnd(0,1);
 	zdir		= Rnd(0,1);
@@ -73,28 +69,25 @@ void Particle::Run()
 
 	this->Move(&xdir, &xPos, wMin, wMax, xspeed);
 	this->Move(&ydir, &yPos, hMin, hMax, yspeed);
-	
-	this->Move(&zdir, &zPos, 1, ZMAX-1 , zspeed);
+	//this->Move(&zdir, &zPos, 1, ZMAX-1 , zspeed);
 
 // 	this->GravityPull(&ydir, &yPos, yspeed);	
 	
-//	this->ZField(&zPos, ZMAX, zspeed);
 	
+	this->ZField(&zPos, ZMAX, zspeed);
 }
 
-void Particle::Move(bool* dir, signed int* pos, int min, int max, int speed)
+void Particle::Move(bool* dir, int* pos, Sint32 min, Sint32 max, int speed)
 {
 	*dir = (*pos >= max) || (*pos <=  min) ? !(*dir) : *dir;
 	*pos = *dir ? *pos - speed : *pos + speed;
 }
 
 
-void Particle::ZField(int* pos, int max, int speed)
+void Particle::ZField(Sint32* pos, int max, int speed)
 {
-	int Pos = *pos;
-	Pos+= speed;
-	Pos = Pos > max ? 0 : Pos;
-	*pos = Pos;
+	(*pos)-=4;
+	*pos = *pos < 0 ? max : *pos;
 }
 
 
@@ -114,8 +107,8 @@ Stream::Stream()
 {
 	this->preScaleCount = ZSCALES;
 	this->particleCount = PARTICLES;
-	this->distance	    = 550;
-	this->k		    = 170;
+	this->distance	    = 320;
+	this->k		    = 310;
 	this->alpha	    = 255;	
 }
 
@@ -131,27 +124,33 @@ void Stream::Render(SDL_Surface* screen)
 	Uint32	pCnt = 0;
 	Sint32	scale;
 	Sint16  X,Y,Z;
+	Uint32	size;
+	Uint32* sortedParticles[ZMAX];
+	Uint32	tmp1, tmp2;
 	
 	SDL_FillRect(screen,NULL,0);
 	Particle* particle;
 	
+	
+	pCnt = 0;
 	while(pCnt < particleCount)
 	{
 		particle= particles[pCnt];
 		//scale = particle->zPos / 100;
-		//X  = (particle->xPos * distance) / (particle->zPos + distance);
-		//Y  = (particle->yPos * distance) / (particle->zPos + distance);
-		X = particle->xPos / 1+ (particle->zPos / distance);
-		Y = particle->yPos / 1+ (particle->zPos / distance);
+		//X  = (particle->xPos * k) / (particle->zPos + distance);
+		//Y  = (particle->yPos * k) / (particle->zPos + distance);
+		X = 100.0 * particle->xPos / (1.0 + particle->zPos);
+		Y = 100.0 * particle->yPos / (1.0 + particle->zPos);
 		Z  = particle->zPos / (ZMAX / ZSCALES) ;
-
-		Z  = Z > ZSCALES-1 ? ZSCALES-1 : Z;
+		
+		Z = Z > ZSCALES-1 ? ZSCALES-1 : Z;
 
 		X += (screen->w/2);
 		Y += (screen->h/2);
-	
+
+		size = scaledSize[Z];
 		sge_BlitTransparent(scaledParticles[Z], screen, 0,0, X,Y, 
-							  Z,Z, 0,alpha);
+							  size,size, 0,alpha);
 		particle->Run();
 		pCnt++; 
 	}
@@ -189,22 +188,25 @@ void Stream::Init(AttrMap)
 
 void Stream::preScaleParticle(SDL_Surface* pic)
 {
-	Uint32		scaleIt = 0;
+	Uint32		scaleIt = ZSCALES;
+	Uint32		cnt = 0;
 	float		scale = 1.0;
 	SDL_Surface*	tempSurface;
 
-	while(scaleIt < ZSCALES)
+	while(scaleIt)
 	{
 	    tempSurface = sge_CreateAlphaSurface(SDL_HWSURFACE, 
 			    			scaleIt, scaleIt); 
 
-	    scale = (float) (scaleIt/2) / ZSCALES;
+	    scale = (float) (scaleIt/4) / ZSCALES;
 	   
 	    sge_transform(pic, tempSurface, 0, scale , scale , 0, 0, 0, 0, SGE_TAA);
-	    if(scaleIt < 64 || scaleIt > 100)
-	    	blurSurface(tempSurface,4);
-	    scaledParticles[scaleIt] = tempSurface;
-	    scaleIt++;
+	    if(scaleIt < 64 || scaleIt > 96)
+	    	blurSurface(tempSurface,5);
+	    scaledParticles[cnt] = tempSurface;
+	    scaledSize[cnt] = scaleIt/2;
+	    scaleIt--;
+	    cnt++;
 	}
 }
 

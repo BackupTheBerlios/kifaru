@@ -10,7 +10,7 @@
 
 #define ZMAX 1024
 #define ZSCALES 128
-#define PARTICLES 80
+#define PARTICLES 200
 
 namespace ephidrena{
 
@@ -73,6 +73,7 @@ public:
 	Uint8		gamma;
 	
 	SDL_Surface*	scaledParticles[ZSCALES];
+	Uint32		scaledSize[ZSCALES];
 	Particle*	particles[PARTICLES];
 };
 
