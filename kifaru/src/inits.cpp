@@ -11,8 +11,6 @@ namespace ephidrena
 {
 
 SDL_Surface *screen;
-SDL_Surface *pic1;
-SDL_Surface *pic2;
 
 extern SDL_Surface *screen;
 
@@ -41,8 +39,8 @@ void Init::SDL()
   
   atexit(SDL_Quit);
   
-  screen = SDL_SetVideoMode(1280,1024, 32, 
-                    SDL_SWSURFACE|SDL_HWPALETTE|SDL_DOUBLEBUF);
+  screen = SDL_SetVideoMode(700,525, 32, 
+                    SDL_FULLSCREEN|SDL_SWSURFACE|SDL_HWACCEL|SDL_RLEACCEL|SDL_DOUBLEBUF);
   if (screen==NULL)
   {
       cout << ("Fåkke satt videomode %s",SDL_GetError()) << endl;

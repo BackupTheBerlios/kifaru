@@ -2,6 +2,7 @@
 
 <demo>
    <sequence>
-   	<effect class="Stream" ticks="65536"/>
+   	<effect class="Stream" ticks="15000" kjell="100" />
+   	<effect class="Image" ticks="300" rotate="180" scale="150" filename="gfx/rabalder1.png" />
    </sequence>
 </demo>

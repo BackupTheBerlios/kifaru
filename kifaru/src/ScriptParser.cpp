@@ -124,7 +124,7 @@ void ScriptParser::on_start_element(const Glib::ustring &name,
 	if (it != attrmap.end()) 
 		effect->Ticks = str2int((char*)it->second.c_str());
 	else
-		effect-> Ticks = -1;
+		effect-> Ticks = 65535;
 
 	std::cout << " som varer i " << effect->Ticks << " ticks" << std::endl;
 
@@ -132,14 +132,18 @@ void ScriptParser::on_start_element(const Glib::ustring &name,
 	effect_stack.top()->addEffect(effect);
 	break;
     }
+
+    	std::cout << "Vi er her og!" << std::endl;
     
     if (ce) 
     {
+	    
 	if (effect_stack.empty())
 	    m_scheduler->setRoot(ce);
 	std::cerr << "Pusher effektgjeng" << std::endl;
 	effect_stack.push(ce);
     }
+    	std::cout << "Og her!" << std::endl;
 }
 
 void ScriptParser::on_end_element(const Glib::ustring &name)

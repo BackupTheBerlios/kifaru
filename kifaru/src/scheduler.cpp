@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <SDL/SDL.h>
+#include <SDL/sge.h>
 #include "config.h"
 #include "scheduler.h"
 #include "effect.h"
@@ -36,6 +37,7 @@ void Scheduler::EventHandler()
 
 	root_effect->Render(screen);
 	SDL_Flip(screen);
+	SDL_Delay(5);
 
 	while (SDL_PollEvent(&event)) {
 	    if (event.type == SDL_USEREVENT) {
@@ -52,7 +54,6 @@ void Scheduler::EventHandler()
 	    }
         }
 	
-	//SDL_Delay(3);
     }
 
 out:

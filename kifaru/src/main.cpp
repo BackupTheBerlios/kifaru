@@ -20,13 +20,13 @@ int main(int argc, char *argv[])
    
     init.SDL();
     timer.Install();
-    //audio.InitOgg("/home/zixaq/musikk/disparagement_disorder.ogg");
-    //audio.InitOgg("msx/wireframes.ogg");
+    audio.InitOgg("/home/zixaq/musikk/disparagement_disorder.ogg");
+    audio.InitOgg("msx/wireframes.ogg");
     audio.InitOgg("msx/Sursum_Corda.ogg");
     
     if (!parser.parse("effects.xml", &scheduler)) {
-	cerr << "Failed to parse script" << endl;
-	return 1;
+//	cerr << "Failed to parse script" << endl;
+//	return 1;
     }
     
     audio.PlayOgg();

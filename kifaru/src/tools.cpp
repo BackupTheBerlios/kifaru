@@ -61,8 +61,35 @@ int	Rnd(int min,int max)
 	seed += unsigned(time(0));
 	srand(seed);
 
-	return (min + rand()) % max; 
+	return (min + rand() ) % max; 
 }
 
+
+static int partition(int a[], int first, int last) {
+  int pivot = a[first];
+  int lastS1 = first;
+  int firstUnknown = first + 1;
+  while (firstUnknown <= last) {
+    if (a[firstUnknown] < pivot) {
+      lastS1++;
+      std::swap(a[firstUnknown], a[lastS1]);
+    }
+    firstUnknown++;
+  }
+  std::swap(a[first], a[lastS1]);
+  return lastS1;
+}
+
+static void quicksort(int a[], int first, int last) {
+  if (first < last) {
+    int pivotIndex = partition(a, first, last);
+    quicksort(a, first, pivotIndex - 1);
+    quicksort(a, pivotIndex + 1, last);
+  }
+}
+
+static void quicksort(int a[], int aSize) {
+  quicksort(a, 0, aSize - 1);
+}
 
 };

@@ -26,8 +26,8 @@ Particle::Particle()
 	xdir		= Rnd(0,1);
 	ydir		= Rnd(0,1);
 	zdir		= Rnd(0,1);
-	lifeSpan	= Rnd(50,250);
-	weight		= Rnd(50,100);
+	lifeSpan	= Rnd(5,100);
+	weight		= Rnd(5,100);
 	magnetism	= Rnd(10,50);
 	
 	trajectoryPos	= NULL;
@@ -46,11 +46,13 @@ void Particle::Resurrect()
 {
 	xspeed		= Rnd(1,5);
 	yspeed		= Rnd(1,5);
-	zspeed		= Rnd(1,3);
+	zspeed		= Rnd(1,6);
 	xdir		= Rnd(0,1);
 	ydir		= Rnd(0,1);
 	zdir		= Rnd(0,1);
 	lifeSpan	= Rnd(50,250);
+	if(yPos > (screen->h/2)-20)
+		yPos = Rnd(0,100);
 }
 
 void Particle::Run()
@@ -71,10 +73,13 @@ void Particle::Run()
 	this->Move(&ydir, &yPos, hMin, hMax, yspeed);
 	//this->Move(&zdir, &zPos, 1, ZMAX-1 , zspeed);
 
-// 	this->GravityPull(&ydir, &yPos, yspeed);	
+ 	//this->GravityPull(&ydir, &yPos, yspeed);	
 	
-	
-	this->ZField(&zPos, ZMAX, zspeed);
+	xPos+=screen->w/2;	
+	this->ZField(&xPos, screen->w, xspeed*8);
+	xPos-=screen->w/2;	
+
+//	this->ZField(&zPos, ZMAX, zspeed/3);
 }
 
 void Particle::Move(bool* dir, int* pos, Sint32 min, Sint32 max, int speed)
@@ -95,10 +100,10 @@ void Particle::GravityPull(bool* dir, int* pos, int speed)
 {
 	static int bottom = screen->h/2;
 
-	if (*pos == bottom)
-		return;			//dead ball
+	if (*pos == bottom-20 || *pos < 0)
+		return;			//dead ball or not within range
 	
-	*pos += *pos;
+	*pos += (*pos + (screen->h )) / (screen->h); // <-too fake!
 	
 }
 	
