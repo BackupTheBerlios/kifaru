@@ -49,20 +49,20 @@ bool ScriptParser::parse(const char *filename, Scheduler *sched)
 
 void ScriptParser::on_error(const std::string &text)  	
 {
-    std::cerr << text;
+    std::cerr << "Parse error: " << text;
     parse_success = false;
 }
 
 void ScriptParser::on_fatal_error(const std::string &text)  	
 {
-    std::cerr << text;
+    std::cerr << "Fatal parse error: " << text << std::endl;
     parse_success = false;
 }
 
 
 void ScriptParser::on_warning(const std::string &text)
 {
-    std::cerr << text;
+    std::cerr << "Warning " << text << std::endl;
 
 }
 
@@ -116,7 +116,7 @@ void ScriptParser::on_start_element(const Glib::ustring &name,
 	    return;
 	}
 	
-	std::cerr << "Mekker effekt av typen" << it->second;
+	std::cerr << "Mekker effekt av typen " << it->second;
 	
 	effect = EffectFactory::instance()->createEffect(it->second.c_str());
 	
@@ -130,6 +130,7 @@ void ScriptParser::on_start_element(const Glib::ustring &name,
 
 	effect->Init(attrmap);
 
+	cout << "addEffect " << std::endl;
 	effect_stack.top()->addEffect(effect);
 	break;
     }

@@ -23,8 +23,8 @@ class Image : public Effect
     void          Render(SDL_Surface*);
     SDL_Surface*  Scale(SDL_Surface*, float, float);
     Uint32        xofs,yofs;
+    Uint32	  rotate, alpha;
     float	  scale,xscale,yscale;
-    Uint32	  rotate;
     void          LoadBMP();
     void          LoadPNG();
 
@@ -36,7 +36,6 @@ class Image : public Effect
 			       SDL_Surface *picture, 
 			       int smooth, float zoomxf, float zoomyf); 
 
-    void          Draw (SDL_Surface *screen);
 };
  
 };

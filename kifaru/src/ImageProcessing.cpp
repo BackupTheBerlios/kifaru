@@ -22,9 +22,11 @@ Image::Image()
 {
     this->xofs		= 0;
     this->yofs		= 0;
-    this->scale		= 1;
-    this->xscale	= 1;
-    this->yscale	= 1;
+    this->scale		= 1.0;
+    this->xscale	= 1.0;
+    this->yscale	= 1.0;
+    this->rotate	= 0;
+    this->alpha		= 255;
 }
 
 Image::~Image()
@@ -37,10 +39,15 @@ void Image::Init(AttrMap attrmap)
 {
     AttrMap::const_iterator it;
     
+    cout << "mekker attrmap!" << std::endl;
+    
     it = attrmap.find("filename");
     this->fileName = (char*)it->second.c_str();
+    cout << "hei!" << std::endl;
     this->LoadPNG();
-     
+    
+   
+    cout << "hei!" << std::endl;
     it = attrmap.find("xofs");
     if (it != attrmap.end())
         this->xofs = str2int((char*)it->second.c_str());
@@ -63,7 +70,14 @@ void Image::Init(AttrMap attrmap)
 
     it = attrmap.find("rotate");
     if(it !=attrmap.end())
-	    this->rotate = (str2int((char*)it->second.c_str()));
+	    this->rotate = str2int((char*)it->second.c_str());
+
+    it = attrmap.find("alpha");
+    if(it !=attrmap.end())
+	    this->alpha = str2int((char*)it->second.c_str());
+
+    cout << "mekka attrmap!" << std::endl;
+	    
 }
 
 
@@ -89,8 +103,7 @@ void Image::Render (SDL_Surface *screen)
 				this->scale * this->yscale, smooth);
 	}
 
-	
-	
+	SDL_SetAlpha(workScreen,SDL_SRCALPHA,5);	
 
         SDL_BlitSurface(workScreen, NULL, screen, &dest);
 	SDL_FreeSurface(workScreen);
@@ -112,84 +125,6 @@ void Image::LoadPNG()
     this->pic = IMG_LoadPNG_RW(rwop);
     if (!this->pic) cout << "LoadPNG tryna!" << endl;
 }
-
-SDL_Surface* Image::Scale(SDL_Surface *original, float xscale, float yscale)
-{
-    Uint32 xofs = 0, yofs = 0, dofs = 0;
-    float  sofs = 0, sinc = 1 / xscale, sy = 0;
-    Uint32 *pixels;
-    SDL_Surface *scaled = SDL_CreateRGBSurface(SDL_SWSURFACE,
-          (xscale * original->w), (yscale * original->h), original->format->BitsPerPixel,
-          original->format->Rmask, original->format->Gmask , original->format->Bmask, original->format->Amask);
-
-     Uint32 *original_pixels = static_cast<Uint32 *>(original->pixels);
-     Uint32 *scaled_pixels   = static_cast<Uint32 *>(scaled->pixels);
-
-     while(yofs < (yscale * original->h))
-     {
-        while(xofs < (xscale * original->w))
-        {
-            scaled_pixels[dofs] = original_pixels[(Uint32)sofs];
-            dofs++;
-            sofs += sinc;
-        }
-
-        sy += 1 / yscale;
-        sofs = sy * original->pitch;
-      }
-
-}
-
-
-
-void Image::RotatePicture (SDL_Surface *screen, SDL_Surface *picture, int rotate, int smooth) 
-{
-	SDL_Surface *rotozoom_picture;
-	SDL_Rect dest;
-	static int framecount = 360, framemax = 4*360, frameinc=1;
-	static float zoomf;
-
-	/* Rotate and display the picture */
-	SDL_Surface *pictureX, *picture_again;
-	char *bmpfile;
-
-
-	framecount += frameinc;
-
-        if ((framecount % 360)==0) 
-	    frameinc++;
-       
-//        ClearScreen(screen);
-	zoomf=(float)framecount/(float)framemax;
-	zoomf=1.5*zoomf*zoomf;
-	if ((rotozoom_picture=rotozoomSurface (picture, framecount*rotate, zoomf, smooth))!=NULL) 
-	{
-	    dest.x = (screen->w - rotozoom_picture->w)/2;;
-	    dest.y = (screen->h - rotozoom_picture->h)/2;
-	    dest.w = rotozoom_picture->w;
-	    dest.h = rotozoom_picture->h;
-	    SDL_BlitSurface(rotozoom_picture, NULL, screen, &dest);
-	}
-				
- 		/* Final display with angle=0 */
-			
-		if ((rotozoom_picture=rotozoomSurface (picture, 0.01, zoomf, smooth))!=NULL) 
-		{
-			dest.x = (screen->w - rotozoom_picture->w)/2;;
-			dest.y = (screen->h - rotozoom_picture->h)/2;
-			dest.w = rotozoom_picture->w;
-			dest.h = rotozoom_picture->h;
-  			SDL_BlitSurface(rotozoom_picture, NULL, screen, &dest);
-		}		
-		
-}
-
-void Image::ZoomPicture (SDL_Surface *workScreen, SDL_Surface *picture, int smooth, float zoomxf, float zoomyf) 
-{
-
-	workScreen =  zoomSurface (picture, zoomxf, zoomyf, smooth);
-}
-
 
 
 };

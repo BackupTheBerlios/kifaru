@@ -20,23 +20,15 @@ int main(int argc, char *argv[])
    
     init.SDL();
     timer.Install();
-    audio.InitOgg("/home/zixaq/musikk/disparagement\\ disorder.ogg");
+    //audio.InitOgg("/home/zixaq/musikk/disparagement_disorder.ogg");
+    //audio.InitOgg("msx/wireframes.ogg");
+    audio.InitOgg("msx/Sursum_Corda.ogg");
     
     if (!parser.parse("effects.xml", &scheduler)) {
 	cerr << "Failed to parse script" << endl;
 	return 1;
     }
     
-#if 0
-    effect = factory->createEffect("Image");
-    effect->fileName = "gfx/alphapartikkel1.png";
-    effect->LoadPNG();
-    effect->xofs = 0;
-    effect->yofs = 24;
-    scheduler.AddEffect(effect);
-    scheduler.AddEffect(factory->createEffect("Jall"));
-#endif
-
     audio.PlayOgg();
     scheduler.EventHandler();
     return 0;

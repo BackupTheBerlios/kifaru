@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf8"?>
 
 <demo>
-  <sequence>	
-	<effect class="Image" ticks="299"   xofs="0" yofs="0" filename="/home/zixaq/grafikk/fortvilelse.png"/>
-	<effect class="Image" xofs ="400" rotate="192" scale="200" filename="/home/zixaq/grafikk/devil.png"/>
-        <exit/>
-  </sequence>
+   <sequence>
+   	<effect class="Image" ticks="100" filename="gfx/rabalder1.png" />
+	<effect class="Image" ticks="299" xofs="400" yofs="0" scale="200" filename="/home/zixaq/grafikk/fortvilelse.png"/>
+	<effect class="Image" ticks="199" scale="200" filename="/home/zixaq/grafikk/devil.png"/>
+   </sequence>
 </demo>
