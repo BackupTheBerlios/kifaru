@@ -26,8 +26,11 @@ Image::Image()
     this->scale		= 1.0;
     this->xscale	= 1.0;
     this->yscale	= 1.0;
-    this->rotate	= 0;
-    this->alpha		= 255;
+    this->rotate	= 0.0;
+    this->alpha		= 128;
+    this->tfScreen	= SDL_CreateRGBSurface(SDL_SWSURFACE, screen->w, screen->h, 32, screen->format->Rmask, screen->format->Gmask, screen->format->Bmask, screen->format->Amask); 
+    this->workScreen	= SDL_CreateRGBSurface(SDL_SWSURFACE, screen->w, screen->h, 32, screen->format->Rmask, screen->format->Gmask, screen->format->Bmask, screen->format->Amask); 
+    this->pic		= SDL_CreateRGBSurface(SDL_SWSURFACE, screen->w, screen->h, 32, screen->format->Rmask, screen->format->Gmask, screen->format->Bmask, screen->format->Amask); 
 }
 
 Image::~Image()
@@ -43,66 +46,59 @@ void Image::Init(AttrMap attrmap)
     it = attrmap.find("filename");
     this->fileName = (char*)it->second.c_str();
     this->LoadPNG();
-    
    
     it = attrmap.find("xofs");
     if (it != attrmap.end())
-        this->xofs = str2int((char*)it->second.c_str());
+        this->xofs = str2int(it->second.c_str());
     
     it = attrmap.find("yofs");    
     if(it != attrmap.end())
-	this->yofs = str2int((char*)it->second.c_str());
+	this->yofs = str2int(it->second.c_str());
 
     it = attrmap.find("scale");
     if(it !=attrmap.end())
-	    this->scale = (str2int((char*)it->second.c_str()) /100.0 );
+	    this->scale = str2int(it->second.c_str()) /100.0 ;
 
     it = attrmap.find("xscale");
     if(it !=attrmap.end())
-	    this->xscale = (str2int((char*)it->second.c_str()) /100.0 );
+	    this->xscale = str2int(it->second.c_str()) /100.0 ;
 
     it = attrmap.find("yscale");
     if(it !=attrmap.end())
-	    this->yscale = (str2int((char*)it->second.c_str()) /100.0 );
+	    this->yscale = str2int(it->second.c_str()) /100.0 ;
 
     it = attrmap.find("rotate");
     if(it !=attrmap.end())
-	    this->rotate = str2int((char*)it->second.c_str());
+	    this->rotate = str2float(it->second.c_str()) ;
 
     it = attrmap.find("alpha");
     if(it !=attrmap.end())
-	    this->alpha = str2int((char*)it->second.c_str());
-
+	    this->alpha = str2int(it->second.c_str());
 }
 
 
 void Image::Render (SDL_Surface *screen)
 {
-	SDL_Surface *workScreen = this->pic;
-
-	Uint32 smooth = 1;
+	Uint32 clear = 0x000000;
 	
         SDL_Rect dest;
         dest.x = this->xofs;
         dest.y = this->yofs;
 
-	if (rotate)
+	if(scale || xscale || yscale || rotate)
 	{
-		workScreen = rotozoomSurface (this->pic, 
-				rotate, scale, smooth); 
-	}
-	else if(scale || xscale || yscale)
-	{
-		workScreen =  zoomSurface (this->pic, 
-				this->scale * this->xscale, 
-				this->scale * this->yscale, smooth);
+		sge_transform( this->pic, tfScreen, this->rotate, 
+					this->scale*this->xscale, this->scale*this->yscale,
+					-1*this->xofs, -1*this->yofs,
+					0,0,
+					0);
 	}
 
-	SDL_SetAlpha(workScreen,SDL_SRCALPHA,5);	
+  //      SDL_BlitSurface(workScreen, NULL, screen, &dest);
 
-        SDL_BlitSurface(workScreen, NULL, screen, &dest);
-	SDL_FreeSurface(workScreen);
-	
+	sge_BlitTransparent(this->tfScreen, screen, 0,0, 0,0, 
+				screen->w, screen->h,
+				clear,9);
         return;
 }
 
@@ -117,7 +113,7 @@ void Image::LoadPNG()
 {
     SDL_RWops *rwop;
     rwop = SDL_RWFromFile(fileName, "rb");
-    this->pic = IMG_LoadPNG_RW(rwop);
+    this->pic = sge_copy_surface(IMG_LoadPNG_RW(rwop));
     if (!this->pic) cout << "LoadPNG tryna!" << endl;
 }
 
