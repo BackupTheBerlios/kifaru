@@ -1,6 +1,9 @@
 #include "tools.h"
 #include "effect.h"
 
+
+using namespace std;
+
 namespace ephidrena {
 
 int str2int(const char* digit) 
@@ -50,4 +53,16 @@ float str2float(const char* digit) {
 
    return result;
 }
+
+int	Rnd(int min,int max)
+{	
+	static unsigned seed;
+	
+	seed += unsigned(time(0));
+	srand(seed);
+
+	return (min + rand()) % max; 
+}
+
+
 };

@@ -8,6 +8,10 @@
 #include "primitives.h"
 #include "tools.h"
 
+#define ZMAX 1024
+#define ZSCALES 128
+#define PARTICLES 80
+
 namespace ephidrena{
 
 class Particle 
@@ -16,16 +20,17 @@ private:
 	void		iteratePos();
 	void		stepTrajectory();
 	void		setTrajectory();
+	void		Move(bool*, signed int*, int, int, int);
+	void		ZField(int*, int, int);
+	void		GravityPull(bool*, int*, int);
 	Uint32*		trajectory;	
 public:
 	Particle();
 	~Particle();
 	void 		Init(SDL_Surface**);
-	void		Run(Uint32);
+	void		Run();
 	void		Resurrect();
 	
-	Uint32		distance;
-	Uint32		k;
 	Uint32		alpha;
 	Uint32		gamma;
 	Uint32		colorkey;
@@ -33,7 +38,7 @@ public:
 	bool		xdir, ydir, zdir;
 	Uint32		weight;
 	Sint32		magnetism;
-	Uint32		xPos, yPos, zPos;
+	Sint32		xPos, yPos, zPos;
 	Uint32		age;
 	Uint32		lifeSpan;
 	Uint32*		trajectoryPos;
@@ -46,8 +51,11 @@ private:
 	void		iterateParticles();
 	void		drawParticles();
 	void		preScaleParticle(SDL_Surface*);
+	void		blurSurface(SDL_Surface*, int);
 	Uint32*		currentParticle;	
 	SDL_Surface	workScreen();
+	Uint32		distance;
+	Uint32		k;
 public:
 	Stream();
 	~Stream();
@@ -59,14 +67,13 @@ public:
 	Uint32		colorKey;
 	Uint32		preScaleCount;
 	Uint32		particleCount;
-	Uint32		zMax;
 	Uint8		alpha;
 	Uint8		alpha_max;
 	Uint8		alpha_min;
 	Uint8		gamma;
 	
-	SDL_Surface*	scaledParticles[128];
-	Particle*	particles[300];
+	SDL_Surface*	scaledParticles[ZSCALES];
+	Particle*	particles[PARTICLES];
 };
 
 };
