@@ -7,92 +7,16 @@
 #include "primitives.h"
 #include "inits.h"
 #include "EffectFactory.h"
-
+#include "tools.h"
 #include "effect.h"
+#include "ImageProcessing.h"
+#include "SDL_rotozoom.h"
 
 using namespace std;
 
 namespace ephidrena
 {
     
-    SDL_Surface *morn;
-
-Image::Image()
-    : Effect("Image")
-{
-    xofs=0;
-    yofs=0;
-}
-
-Image::~Image()
-{
-    
-}    
-
-
-void Image::Init(AttrMap attrmap)
-{
-    AttrMap::const_iterator it;
-    
-    it = attrmap.find("filename");
-
-    this->fileName = (char*)it->second.c_str();
-    this->LoadPNG();
-    this->xofs = 0;
-    this->yofs = 24;
-
-}
-
-
-void Image::Render (SDL_Surface *screen)
-{
-        SDL_Rect dest;
-        dest.x = xofs;
-        dest.y = yofs;
-        SDL_BlitSurface(this->pic, NULL, screen, &dest);
-        return;
-}
-
-void Image::LoadBMP()
-{
-     this->pic=SDL_LoadBMP(fileName); 
-     cout << "image loaded" << endl;
-             
-}  
-
-void Image::LoadPNG()
-{
-    SDL_RWops *rwop;
-    rwop = SDL_RWFromFile(fileName, "rb");
-    this->pic=IMG_LoadPNG_RW(rwop);
-    if(!this->pic) cout << "LoadPNG tryna!" << endl;
-}
-
-SDL_Surface* Image::Scale(SDL_Surface *original, float xscale, float yscale)
-{
-    Uint32 xofs = 0, yofs = 0, dofs = 0;
-    float sofs = 0, sinc = 1 / xscale, sy = 0;
-    Uint32 *pixels;
-    SDL_Surface *scaled = SDL_CreateRGBSurface(SDL_SWSURFACE,
-          (xscale * original->w), (yscale * original->h), original->format->BitsPerPixel,
-          original->format->Rmask, original->format->Gmask , original->format->Bmask, original->format->Amask);
-
-     Uint32 *original_pixels = static_cast<Uint32 *>(original->pixels);
-     Uint32 *scaled_pixels  = static_cast<Uint32 *>(scaled->pixels);
-     while(yofs < (yscale * original->h))
-     {
-        while(xofs < (xscale * original->w))
-        {
-            scaled_pixels[dofs] = original_pixels[(Uint32)sofs];
-            dofs++;
-            sofs += sinc;
-        }
-
-        sy += 1 / yscale;
-        sofs = sy * original->pitch;
-      }
-
-}
 
 Effect::Effect(const char *name)
     : m_name(name)
@@ -156,6 +80,25 @@ void Effect::SLock(SDL_Surface *screen)
 void Effect::SULock(SDL_Surface *screen)
 {
     if ( SDL_MUSTLOCK(screen) ) SDL_UnlockSurface(screen);
+}
+
+
+void Effect::ClearScreen(SDL_Surface *screen)
+{
+        int i;
+        /* Set the screen to black */
+        if ( SDL_LockSurface(screen) == 0 ) {
+                Uint32 color;
+                Uint8 *pixels;
+                color = SDL_MapRGB(screen->format, 64, 64, 64);
+                pixels = (Uint8 *)screen->pixels;
+                for ( i=0; i<screen->h; ++i ) {
+                        memset(pixels, color,
+                                screen->w*screen->format->BytesPerPixel);
+                        pixels += screen->pitch;
+                }
+                SDL_UnlockSurface(screen);
+        }
 }
 
 

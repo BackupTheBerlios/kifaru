@@ -17,7 +17,7 @@ class ScriptParser : public xmlpp::SaxParser
 
 public:
     ScriptParser();
-    int string2int(char *str);
+
     bool parse(const char *filename, Scheduler *sched);
 
 protected:

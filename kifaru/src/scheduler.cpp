@@ -5,6 +5,8 @@
 #include "scheduler.h"
 #include "effect.h"
 #include "inits.h"
+//#include "tools.h"
+//#include "tools.cpp"
 
 using namespace std;
 
@@ -26,7 +28,7 @@ void Scheduler::EventHandler()
     SDL_Event event;
     Uint32 total_ticks;
 
-    cerr << "Nå vil vi ha events!" << endl;
+    std::cerr << "Nå vil vi ha events!" << std::endl;
 
     
     root_effect->prepare();
@@ -56,6 +58,6 @@ void Scheduler::EventHandler()
 
 out:
     return;
-}    
+};   
 
 };

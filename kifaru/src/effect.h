@@ -3,6 +3,7 @@
 #include <SDL/SDL.h>
 #include <map>
 
+
 namespace ephidrena
 {
 
@@ -19,6 +20,7 @@ public:
     virtual         ~Effect();
     void            SLock(SDL_Surface *screen);
     void            SULock(SDL_Surface *screen);
+    void            ClearScreen(SDL_Surface *screen);
 
     /* Abstract method (must be implemented by all subclasses) */
     virtual void    Render(SDL_Surface*) = 0;
@@ -84,22 +86,6 @@ class TD : public Effect
 };
 
 
-class Image : public Effect
-{
- private:
-     SDL_Surface       *pic;   
- public:
-     Image();
-    ~Image();
-    void          Init(AttrMap);
-    void          Render(SDL_Surface*);
-    SDL_Surface*  Scale(SDL_Surface*, float, float);
-    Uint32        xofs,yofs;
-    void          LoadBMP();
-    void          LoadPNG();
-  
- 
-};
 
 
-};
+}

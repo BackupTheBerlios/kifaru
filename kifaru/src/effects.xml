@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf8"?>
 
 <demo>
-  <sequence>
-	<effect class="Image" ticks="100" filename="gfx/godpledd1.png"/>
-	<effect class="Jall"  ticks="40"/>
-	<effect class="Image" ticks="400" filename="gfx/alphapartikkel1.png"/>
-</sequence>
+  <sequence>	
+	<effect class="Image" ticks="299"   xofs="0" yofs="0" filename="/home/zixaq/grafikk/fortvilelse.png"/>
+	<effect class="Image" xofs ="400" rotate="192" scale="200" filename="/home/zixaq/grafikk/devil.png"/>
+        <exit/>
+  </sequence>
 </demo>

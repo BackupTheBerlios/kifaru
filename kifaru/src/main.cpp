@@ -20,11 +20,11 @@ int main(int argc, char *argv[])
    
     init.SDL();
     timer.Install();
-    audio.InitOgg("msx/wireframes.ogg");
+    audio.InitOgg("/home/zixaq/musikk/disparagement\\ disorder.ogg");
     
     if (!parser.parse("effects.xml", &scheduler)) {
 	cerr << "Failed to parse script" << endl;
-	//return 1;
+	return 1;
     }
     
 #if 0
@@ -41,3 +41,5 @@ int main(int argc, char *argv[])
     scheduler.EventHandler();
     return 0;
 }
+
+

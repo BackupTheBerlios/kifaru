@@ -85,7 +85,7 @@ am__include = @am__include@
 am__quote = @am__quote@
 install_sh = @install_sh@
 noinst_PROGRAMS := kifaru
-kifaru_SOURCES = main.cpp effect.cpp audio.cpp scheduler.cpp timer.cpp primitives.cpp inits.cpp EffectFactory.cpp ScriptParser.cpp CompoundEffect.cpp
+kifaru_SOURCES = main.cpp effect.cpp audio.cpp scheduler.cpp timer.cpp primitives.cpp inits.cpp EffectFactory.cpp ScriptParser.cpp CompoundEffect.cpp tools.cpp ImageProcessing.cpp
 subdir = src
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_CLEAN_FILES =
@@ -95,7 +95,8 @@ PROGRAMS = $(noinst_PROGRAMS)
 am_kifaru_OBJECTS = main.$(OBJEXT) effect.$(OBJEXT) audio.$(OBJEXT) \
 	scheduler.$(OBJEXT) timer.$(OBJEXT) primitives.$(OBJEXT) \
 	inits.$(OBJEXT) EffectFactory.$(OBJEXT) ScriptParser.$(OBJEXT) \
-	CompoundEffect.$(OBJEXT)
+	CompoundEffect.$(OBJEXT) tools.$(OBJEXT) \
+	ImageProcessing.$(OBJEXT)
 kifaru_OBJECTS = $(am_kifaru_OBJECTS)
 kifaru_LDADD = $(LDADD)
 kifaru_DEPENDENCIES =
@@ -110,10 +111,12 @@ depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
 @AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/CompoundEffect.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/EffectFactory.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/ImageProcessing.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/ScriptParser.Po ./$(DEPDIR)/audio.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/effect.Po ./$(DEPDIR)/inits.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/main.Po ./$(DEPDIR)/primitives.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/scheduler.Po ./$(DEPDIR)/timer.Po
+@AMDEP_TRUE@	./$(DEPDIR)/scheduler.Po ./$(DEPDIR)/timer.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/tools.Po
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 CXXLD = $(CXX)
@@ -148,6 +151,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/CompoundEffect.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/EffectFactory.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ImageProcessing.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ScriptParser.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audio.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/effect.Po@am__quote@
@@ -156,6 +160,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/primitives.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/scheduler.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/timer.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tools.Po@am__quote@
 
 distclean-depend:
 	-rm -rf ./$(DEPDIR)

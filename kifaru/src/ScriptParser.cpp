@@ -2,9 +2,11 @@
 #include "CompoundEffect.h"
 #include "EffectFactory.h"
 #include "scheduler.h"
-
+#include "tools.h"
 #include <string>
 #include <iostream>
+
+using namespace std;
 
 namespace ephidrena
 {
@@ -28,7 +30,6 @@ void InitEnum()
     s_mapTags["sequence"] = t_Sequence;
     s_mapTags["parallel"] = t_Parallel;
     s_mapTags["effect"]   = t_Effect;
-//    s_mapTags["Effect"]   = _Effect;
     s_mapTags["exit"]     = t_Exit;
 }
 
@@ -74,20 +75,24 @@ void ScriptParser::on_start_element(const Glib::ustring &name,
 
     switch(s_mapTags[name])
     {
-    case t_Sequence :
 
-	std::cerr << "Mekker sekkvens" << std::endl;
+    case t_Exit :
+	std::cerr << "Found exit!" << std::endl;
+	break;
+
+    case t_Sequence :
+	std::cerr << "Found sequence" << std::endl;
 	ce = new EffectSequence;
 	effect = ce;
 	break;
 	
 	
-    case t_Parallel :
-	
-	std::cerr << "Fy søren! Flere effekter på en gang!" << std::endl;
+    case t_Parallel :	
+	std::cerr << "Found parallel" << std::endl;
 	ce = new ParallelEffect;
 	effect = ce;
 	break;
+
 	
     case t_Effect :
 	if (effect_stack.empty()) {
@@ -95,7 +100,6 @@ void ScriptParser::on_start_element(const Glib::ustring &name,
 		      << std::endl;
 	    return;
 	}
-	
 	
 	Effect::AttrMap attrmap;
 	for (SaxParser::AttributeList::const_iterator i = attributes.begin();
@@ -112,14 +116,17 @@ void ScriptParser::on_start_element(const Glib::ustring &name,
 	    return;
 	}
 	
-	std::cerr << "Mekker effekt som heter " << it->second << std::endl;
+	std::cerr << "Mekker effekt av typen" << it->second;
 	
 	effect = EffectFactory::instance()->createEffect(it->second.c_str());
 	
 	it = attrmap.find("ticks");
+	if (it != attrmap.end()) 
+		effect->Ticks = str2int((char*)it->second.c_str());
+	else
+		effect-> Ticks = -1;
 
-	effect->Ticks = string2int((char*)it->second.c_str());
-	std::cout << "Den varer i " << effect->Ticks << " ticks" << std::endl;
+	std::cout << " som varer i " << effect->Ticks << " ticks" << std::endl;
 
 	effect->Init(attrmap);
 
@@ -144,26 +151,6 @@ void ScriptParser::on_end_element(const Glib::ustring &name)
 	effect_stack.pop();
     }
 }
-
-
-int ScriptParser::string2int(char* digit) {
-   int result = 0;
-
-   //--- Convert each digit char and add into result.
-   while (*digit >= '0' && *digit <='9') {
-      result = (result * 10) + (*digit - '0');
-      digit++;
-   }
-
-   //--- Check that there were no non-digits at end.
-   if (*digit != 0) {
-      return false;
-   }
-
-   return result;
-}
-
-
 
 
 }
