@@ -5,8 +5,7 @@
 #include "audio.h"
 #include "timer.h"
 #include "scheduler.h"
-#include "effect.h"
-#include "EffectFactory.h"
+#include "Script.h"
 
 using namespace std;
 using namespace ephidrena;
@@ -17,14 +16,19 @@ int main(int argc, char *argv[])
     Audio audio;
     Timer timer;
     Scheduler scheduler;
-    Effect *effect;
-    EffectFactory *factory = EffectFactory::instance();
+    Script script("effects.script");
    
     init.SDL();
     timer.Install();
     audio.InitOgg("msx/wireframes.ogg");
     audio.PlayOgg();
     
+    if (!script.parse(&scheduler)) {
+	cerr << "Failed to parse script" << endl;
+	return 1;
+    }
+    
+#if 0
     effect = factory->createEffect("Image");
     effect->fileName = "gfx/alphapartikkel1.png";
     effect->LoadPNG();
@@ -32,6 +36,7 @@ int main(int argc, char *argv[])
     effect->yofs = 24;
     scheduler.AddEffect(effect);
     scheduler.AddEffect(factory->createEffect("Jall"));
+#endif
 
     scheduler.EventHandler();
     return 0;

@@ -1,3 +1,4 @@
-noinst_PROGRAMS=kifaru
-kifaru_SOURCES=main.cpp effect.cpp audio.cpp scheduler.cpp timer.cpp primitives.cpp inits.cpp EffectFactory.cpp
+noinst_PROGRAMS := kifaru
+kifaru_SOURCES  := main.cpp effect.cpp audio.cpp scheduler.cpp timer.cpp
+kifaru_SOURCES  += primitives.cpp inits.cpp EffectFactory.cpp Script.cpp
 
