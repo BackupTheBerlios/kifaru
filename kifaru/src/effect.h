@@ -8,7 +8,12 @@ class Effect
     virtual         ~Effect();
     void            SLock(SDL_Surface *screen);
     void            SULock(SDL_Surface *screen);
-    virtual void    Render(SDL_Surface*);
+
+    /* Abstract method (must be implemented by all subclasses) */
+    virtual void    Render(SDL_Surface*) = 0;
+
+    virtual bool    done(Uint32 ticks);
+
     virtual void    LoadBMP();
     virtual void    LoadPNG();
     

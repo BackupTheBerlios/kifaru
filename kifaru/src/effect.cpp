@@ -1,5 +1,6 @@
 #include <iostream>
 #include <stdlib.h>
+#include <math.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include "config.h"
@@ -65,6 +66,11 @@ Effect::~Effect()
 void Effect::Render(SDL_Surface *screen)
 {
     
+}
+
+bool Effect::done(Uint32 ticks)
+{
+    return ticks > 705;
 }
 
 void Effect::LoadPNG()
