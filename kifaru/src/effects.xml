@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf8"?>
+
+<demo>
+  <sequence>
+    <effect class="Jall" ticks="50"/>
+    <effect class="Image"/>
+  </sequence>
+</demo>

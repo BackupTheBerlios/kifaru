@@ -24,14 +24,19 @@ Effect *EffectFactory::createEffect(const char *name)
 	return NULL;
     }
 
-    return it->second;
+    return it->second->createEffect();
 }
 
-void EffectFactory::registerEffect(const char *name, Effect *effect)
+void EffectFactory::registerEffect(const char *name, EffectCreator *effect)
 {
     std::cout << "registerEffect: " << name << std::endl;
 
     effects.insert(EffectMap::value_type(name, effect));
+}
+
+EffectCreator::EffectCreator()
+{
+
 }
 
 }

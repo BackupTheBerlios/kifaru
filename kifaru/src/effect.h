@@ -1,10 +1,19 @@
+// -*- C++ -*-
+
+#include <SDL/SDL.h>
+#include <map>
+
 namespace ephidrena
 {
 
 class Effect
 {
- public:
-                    Effect();
+    const char *    m_name;
+
+public:
+    typedef std::map<std::string, std::string> AttrMap;
+
+                    Effect(const char *name);
     virtual         ~Effect();
     void            SLock(SDL_Surface *screen);
     void            SULock(SDL_Surface *screen);
@@ -12,7 +21,9 @@ class Effect
     /* Abstract method (must be implemented by all subclasses) */
     virtual void    Render(SDL_Surface*) = 0;
 
-    virtual bool    done(Uint32 ticks);
+    virtual void    prepare();
+    virtual void    newTick(Uint32 ticks);
+    virtual bool    isDone(Uint32 ticks);
 
     virtual void    LoadBMP();
     virtual void    LoadPNG();
@@ -28,6 +39,9 @@ class Effect
     char            *fileName;
     Uint32          xofs,yofs;
 
+    const char *    name() const {
+	return m_name;
+    }
 };
 
 class Jall : public Effect

@@ -5,7 +5,7 @@
 #include "audio.h"
 #include "timer.h"
 #include "scheduler.h"
-#include "Script.h"
+#include "ScriptParser.h"
 
 using namespace std;
 using namespace ephidrena;
@@ -16,14 +16,14 @@ int main(int argc, char *argv[])
     Audio audio;
     Timer timer;
     Scheduler scheduler;
-    Script script("effects.script");
+    ScriptParser parser;
    
     init.SDL();
     timer.Install();
     audio.InitOgg("msx/wireframes.ogg");
     audio.PlayOgg();
     
-    if (!script.parse(&scheduler)) {
+    if (!parser.parse("effects.xml", &scheduler)) {
 	cerr << "Failed to parse script" << endl;
 	return 1;
     }

@@ -18,6 +18,7 @@ namespace ephidrena
     SDL_Surface *morn;
 
 Image::Image()
+    : Effect("Image")
 {
     
      
@@ -80,9 +81,10 @@ SDL_Surface* Image::Scale(SDL_Surface *original, float xscale, float yscale)
 
 }
 
-Effect::Effect()
+Effect::Effect(const char *name)
+    : m_name(name)
 {
-     return;   
+    return;
 }  
 
 Effect::~Effect()
@@ -95,7 +97,17 @@ void Effect::Render(SDL_Surface *screen)
     
 }
 
-bool Effect::done(Uint32 ticks)
+void Effect::prepare()
+{
+
+}
+
+void Effect::newTick(Uint32 ticks)
+{
+
+}
+
+bool Effect::isDone(Uint32 ticks)
 {
     return ticks > 705;
 }
@@ -127,6 +139,7 @@ void Effect::SULock(SDL_Surface *screen)
 
 
 Jall::Jall()
+    : Effect("Jall")
 {
 
 }

@@ -23,27 +23,23 @@ Scheduler::~Scheduler()
 
 void Scheduler::EventHandler()
 {
-    EffectList::iterator ei;
-    Effect *effect;
     SDL_Event event;
-    Uint32 effect_ticks = 0, total_ticks = 0;
+    Uint32 total_ticks = 0;
 
-    ei = effects.begin();
+    cerr << "Nå vil vi ha events!" << endl;
 
-    while (ei != effects.end()) {
-	effect = *ei;
+    root_effect->prepare();
 
-	effect->Render(screen);
+    while (!root_effect->isDone(total_ticks)) {
+	cerr << "Skal rendre" << endl;
+	root_effect->Render(screen);
+	cerr << "Har rendra" << endl;
 	SDL_Flip(screen);
 
 	while (SDL_PollEvent(&event)) {
 	    if (event.type == SDL_USEREVENT) {
-		effect_ticks++;
 		total_ticks++;
-		if (effect->done(effect_ticks)) {
-		    effect_ticks = 0;
-		    ++ei;
-		}
+		root_effect->newTick(total_ticks);
 	    }
 	    if (event.type == SDL_QUIT )
 		goto out;
