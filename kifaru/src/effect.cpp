@@ -53,6 +53,33 @@ void Image::LoadPNG()
     if(!this->pic) cout << "LoadPNG tryna!" << endl;
 }
 
+SDL_Surface* Image::Scale(SDL_Surface *original, float xscale, float yscale)
+{
+    Uint32 xofs = 0, yofs = 0, dofs = 0;
+    float sofs = 0, sinc = 1 / xscale, sy = 0;
+    Uint32 *pixels;
+    SDL_Surface *scaled = SDL_CreateRGBSurface(SDL_SWSURFACE,
+          (xscale * original->w), (yscale * original->h), original->format->BitsPerPixel,
+          original->format->Rmask, original->format->Gmask , original->format->Bmask, original->format->Amask);
+
+     Uint32 *original_pixels = static_cast<Uint32 *>(original->pixels);
+     Uint32 *scaled_pixels  = static_cast<Uint32 *>(scaled->pixels);
+     while(yofs < (yscale * original->h))
+     {
+        while(xofs < (xscale * original->w))
+        {
+            scaled_pixels[dofs] = original_pixels[(Uint32)sofs];
+            dofs++;
+            sofs += sinc;
+        }
+
+        sy += 1 / yscale;
+        sofs = sy * original->pitch;
+      }
+
+}
+
+
 Effect::Effect()
 {
      return;   

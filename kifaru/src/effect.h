@@ -61,6 +61,7 @@ class Image : public Effect
      Image();
     ~Image();
     void Render(SDL_Surface*);
+        SDL_Surface* Scale(SDL_Surface*, float, float);
     Uint32            xofs,yofs;
     void    LoadBMP();
     void    LoadPNG();

@@ -1,3 +1,4 @@
+m4trace:aclocal.m4:50: -1- m4_pattern_allow([^AM_[A-Z]+FLAGS$])
 m4trace:configure.in:4: -1- AC_INIT([kifaru], [0.04], [nerve@multihost.no])
 m4trace:configure.in:4: -1- m4_pattern_forbid([^_?A[CHUM]_])
 m4trace:configure.in:4: -1- m4_pattern_forbid([_AC_])
@@ -65,25 +66,19 @@ m4trace:configure.in:5: -1- AC_SUBST([target_cpu], [`echo $ac_cv_target | sed 's
 m4trace:configure.in:5: -1- AC_SUBST([target_vendor], [`echo $ac_cv_target | sed 's/^\([[^-]]*\)-\([[^-]]*\)-\(.*\)$/\2/'`])
 m4trace:configure.in:5: -1- AC_SUBST([target_os], [`echo $ac_cv_target | sed 's/^\([[^-]]*\)-\([[^-]]*\)-\(.*\)$/\3/'`])
 m4trace:configure.in:6: -1- AM_INIT_AUTOMAKE([kifaru], [0.04])
+m4trace:configure.in:6: -1- AM_AUTOMAKE_VERSION([1.6.3])
 m4trace:configure.in:6: -1- AC_PROG_INSTALL
 m4trace:configure.in:6: -1- AC_SUBST([INSTALL_PROGRAM])
 m4trace:configure.in:6: -1- AC_SUBST([INSTALL_SCRIPT])
 m4trace:configure.in:6: -1- AC_SUBST([INSTALL_DATA])
-m4trace:configure.in:6: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me:$LINENO: error: source directory already configured; run \"make distclean\" there first], [aclocal.m4:102: AM_INIT_AUTOMAKE is expanded from...
-configure.in:6: the top level])
-m4trace:configure.in:6: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me: error: source directory already configured; run \"make distclean\" there first], [aclocal.m4:102: AM_INIT_AUTOMAKE is expanded from...
-configure.in:6: the top level])
-m4trace:configure.in:6: -1- AC_SUBST([PACKAGE])
-m4trace:configure.in:6: -1- AC_SUBST([VERSION])
+m4trace:configure.in:6: -1- AC_SUBST([PACKAGE], [kifaru])
+m4trace:configure.in:6: -1- AC_SUBST([VERSION], [0.04])
 m4trace:configure.in:6: -1- AC_DEFINE_TRACE_LITERAL([PACKAGE])
 m4trace:configure.in:6: -1- AH_OUTPUT([PACKAGE], [/* Name of package */
 #undef PACKAGE])
 m4trace:configure.in:6: -1- AC_DEFINE_TRACE_LITERAL([VERSION])
 m4trace:configure.in:6: -1- AH_OUTPUT([VERSION], [/* Version number of package */
 #undef VERSION])
-m4trace:configure.in:6: -1- m4_pattern_allow([^AM_[A-Z]+FLAGS])
-m4trace:configure.in:6: -1- AC_SUBST([EXEEXT])
-m4trace:configure.in:6: -1- AC_SUBST([OBJEXT])
 m4trace:configure.in:6: -1- AC_SUBST([ACLOCAL])
 m4trace:configure.in:6: -1- AC_SUBST([AUTOCONF])
 m4trace:configure.in:6: -1- AC_SUBST([AUTOMAKE])
@@ -91,15 +86,13 @@ m4trace:configure.in:6: -1- AC_SUBST([AUTOHEADER])
 m4trace:configure.in:6: -1- AC_SUBST([MAKEINFO])
 m4trace:configure.in:6: -1- AC_SUBST([AMTAR])
 m4trace:configure.in:6: -1- AC_SUBST([install_sh])
+m4trace:configure.in:6: -1- AC_SUBST([STRIP])
+m4trace:configure.in:6: -1- AC_SUBST([ac_ct_STRIP])
 m4trace:configure.in:6: -1- AC_SUBST([INSTALL_STRIP_PROGRAM])
 m4trace:configure.in:6: -1- AC_PROG_AWK
 m4trace:configure.in:6: -1- AC_SUBST([AWK])
 m4trace:configure.in:6: -1- AC_PROG_MAKE_SET
 m4trace:configure.in:6: -1- AC_SUBST([SET_MAKE])
-m4trace:configure.in:6: -1- AM_CONDITIONAL([AMDEP], [test "x$enable_dependency_tracking" != xno])
-m4trace:configure.in:6: -1- AC_SUBST([AMDEP_TRUE])
-m4trace:configure.in:6: -1- AC_SUBST([AMDEP_FALSE])
-m4trace:configure.in:6: -1- AC_SUBST([DEPDIR])
 m4trace:configure.in:13: -1- AC_PROG_INSTALL
 m4trace:configure.in:13: -1- AC_SUBST([INSTALL_PROGRAM])
 m4trace:configure.in:13: -1- AC_SUBST([INSTALL_SCRIPT])
@@ -113,22 +106,14 @@ m4trace:configure.in:14: -1- AC_SUBST([CXX])
 m4trace:configure.in:14: -1- AC_SUBST([ac_ct_CXX])
 m4trace:configure.in:14: -1- AC_SUBST([EXEEXT], [$ac_cv_exeext])
 m4trace:configure.in:14: -1- AC_SUBST([OBJEXT], [$ac_cv_objext])
-m4trace:configure.in:14: -1- _m4_warn([obsolete], [The macro `AC_OUTPUT_COMMANDS' is obsolete.
-You should run autoupdate.], [autoconf/status.m4:318: AC_OUTPUT_COMMANDS is expanded from...
-aclocal.m4:424: AM_OUTPUT_DEPENDENCY_COMMANDS is expanded from...
-configure.in:14: AM_OUTPUT_DEPENDENCY_COMMANDS is required by...
-aclocal.m4:338: _AM_DEPENDENCIES is expanded from...
-configure.in:14: the top level])
-m4trace:configure.in:14: -3- _m4_warn([obsolete], [The macro `_AC_OUTPUT_COMMANDS_CNT' is obsolete.
-You should run autoupdate.], [autoconf/status.m4:321: _AC_OUTPUT_COMMANDS_CNT is expanded from...
-autoconf/status.m4:318: AC_OUTPUT_COMMANDS is expanded from...
-aclocal.m4:424: AM_OUTPUT_DEPENDENCY_COMMANDS is expanded from...
-configure.in:14: AM_OUTPUT_DEPENDENCY_COMMANDS is required by...
-aclocal.m4:338: _AM_DEPENDENCIES is expanded from...
-configure.in:14: the top level])
+m4trace:configure.in:14: -1- AC_SUBST([DEPDIR])
 m4trace:configure.in:14: -1- AC_SUBST([am__include])
 m4trace:configure.in:14: -1- AC_SUBST([am__quote])
-m4trace:configure.in:14: -1- AC_SUBST([CXXDEPMODE])
+m4trace:configure.in:14: -1- AM_CONDITIONAL([AMDEP], [test "x$enable_dependency_tracking" != xno])
+m4trace:configure.in:14: -1- AC_SUBST([AMDEP_TRUE])
+m4trace:configure.in:14: -1- AC_SUBST([AMDEP_FALSE])
+m4trace:configure.in:14: -1- AC_SUBST([AMDEPBACKSLASH])
+m4trace:configure.in:14: -1- AC_SUBST([CXXDEPMODE], [depmode=$am_cv_CXX_dependencies_compiler_type])
 m4trace:configure.in:15: -1- AC_PROG_CC
 m4trace:configure.in:15: -1- AC_SUBST([CC])
 m4trace:configure.in:15: -1- AC_SUBST([CFLAGS])
@@ -141,15 +126,15 @@ m4trace:configure.in:15: -1- AC_SUBST([ac_ct_CC])
 m4trace:configure.in:15: -1- AC_SUBST([CC])
 m4trace:configure.in:15: -1- AC_SUBST([CC])
 m4trace:configure.in:15: -1- AC_SUBST([ac_ct_CC])
-m4trace:configure.in:15: -1- AC_SUBST([CCDEPMODE])
+m4trace:configure.in:15: -1- AC_SUBST([CCDEPMODE], [depmode=$am_cv_CC_dependencies_compiler_type])
 m4trace:configure.in:24: -1- AC_SUBST([SDL_CONFIG], [$ac_cv_path_SDL_CONFIG])
 m4trace:configure.in:24: -1- _m4_warn([obsolete], [The macro `AC_TRY_RUN' is obsolete.
 You should run autoupdate.], [autoconf/general.m4:2289: AC_TRY_RUN is expanded from...
-aclocal.m4:668: AM_PATH_SDL is expanded from...
+aclocal.m4:933: AM_PATH_SDL is expanded from...
 configure.in:24: the top level])
 m4trace:configure.in:24: -1- _m4_warn([obsolete], [The macro `AC_TRY_LINK' is obsolete.
 You should run autoupdate.], [autoconf/general.m4:2223: AC_TRY_LINK is expanded from...
-aclocal.m4:668: AM_PATH_SDL is expanded from...
+aclocal.m4:933: AM_PATH_SDL is expanded from...
 configure.in:24: the top level])
 m4trace:configure.in:24: -1- AC_SUBST([SDL_CFLAGS])
 m4trace:configure.in:24: -1- AC_SUBST([SDL_LIBS])
@@ -223,3 +208,7 @@ m4trace:configure.in:45: -1- AC_CONFIG_FILES([Makefile
 	        src/Makefile])
 m4trace:configure.in:46: -1- AC_SUBST([LIB@&t@OBJS], [$ac_libobjs])
 m4trace:configure.in:46: -1- AC_SUBST([LTLIBOBJS], [$ac_ltlibobjs])
+m4trace:configure.in:46: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me:$LINENO: error: conditional \"AMDEP\" was never defined.
+Usually this means the macro was only invoked conditionally.], [])
+m4trace:configure.in:46: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me: error: conditional \"AMDEP\" was never defined.
+Usually this means the macro was only invoked conditionally.], [])
