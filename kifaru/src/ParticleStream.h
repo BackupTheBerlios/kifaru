@@ -22,17 +22,20 @@ public:
 	~Particle();
 	void 		Init(SDL_Surface**);
 	void		Run(Uint32);
+	void		Resurrect();
 	
 	Uint32		distance;
 	Uint32		k;
 	Uint32		alpha;
 	Uint32		gamma;
 	Uint32		colorkey;
-	Uint32		speed;
+	Sint32		xspeed,yspeed,zspeed;
+	bool		xdir, ydir, zdir;
 	Uint32		weight;
 	Sint32		magnetism;
 	Uint32		xPos, yPos, zPos;
 	Uint32		age;
+	Uint32		lifeSpan;
 	Uint32*		trajectoryPos;
 };
 
@@ -62,8 +65,8 @@ public:
 	Uint8		alpha_min;
 	Uint8		gamma;
 	
-	SDL_Surface*	scaledParticles[256];
-	Particle*	particles[500];
+	SDL_Surface*	scaledParticles[128];
+	Particle*	particles[300];
 };
 
 };

@@ -18,42 +18,73 @@ namespace ephidrena {
 	alpha 		= 255;
 	gamma 		= 127;
 	colorkey	= 0;
-	speed		= 3;
+	xspeed		= 3+(rand() %5);
+	yspeed		= 3+(rand() %5);
+	zspeed		= 3+(rand() %5);
+	xdir		= (rand() %1);
+	ydir		= (rand() %1);
+	zdir		= (rand() %1);
+	lifeSpan	= 250+(rand() %250);
 	weight		= 1;
 	magnetism	= 0;
 	distance	= 200;
 	k		= 100;
 	trajectoryPos	= NULL;
 	
-	xPos = rand() %  799;
-	yPos = rand() %  599;
-	zPos = rand() %  2047;
-
+	xPos = rand() %  screen->w*2;
+	yPos = rand() %  screen->h*2;
+	zPos = rand() %  2048;
 }
 
 Particle::~Particle()
 {
 }
 
+
+void Particle::Resurrect()
+{
+	xspeed		= 3+(rand() %5);
+	yspeed		= 3+(rand() %5);
+	zspeed		= 3+(rand() %5);
+	xdir		= (rand() %1);
+	ydir		= (rand() %1);
+	zdir		= (rand() %1);
+	lifeSpan	= 250+(rand() %250);
+
+}
+
 void Particle::Run(Uint32 max)
 {
-	if(yPos < screen->h )
-		yPos += speed;
-	else
-		yPos  = 0;
+
+	lifeSpan--;
+	if(!lifeSpan)
+		this->Resurrect();
 	
-	if(zPos < max )
-		zPos += speed;
-	else
-		zPos  = 0;
+	
+	xdir = (xPos > screen->w) || (xPos < 0) ? !xdir : xdir;
+	xPos = xdir ? xPos - xspeed : xPos + xspeed;
+
+/*	yPos-=1;
+	if(yPos<0)
+		yPos = screen->h;
+*/	
+	ydir = (yPos > screen->h) || (yPos < 0) ? !ydir : ydir;
+	yPos = ydir ? (yPos - yspeed) : (yPos + yspeed);
+
+	//zPos++;
+	zdir = (zPos > (max-zspeed)) || (zPos < zspeed) ? !zdir : zdir;
+	zPos = zdir ? (zPos - zspeed) : (zPos + zspeed);
+	
+		
+	
 }
 
 Stream::Stream()
     : Effect("Stream")
 {
-	this->preScaleCount = 256;
-	this->particleCount = 50;
-	this->zMax	    = 1023;
+	this->preScaleCount = 128;
+	this->particleCount = 127;
+	this->zMax	    = 2048;
 	
 }
 
@@ -68,19 +99,19 @@ void Stream::preScaleParticle(SDL_Surface* pic)
 	float		scale = 1.0;
 	SDL_Surface*	tempSurface;
 
-	std::cout << "preScaleCount er: " << preScaleCount << std::endl;
-	std::cout << "zMax er: " << zMax << std::endl;
+	//std::cout << "preScaleCount er: " << preScaleCount << std::endl;
+	//std::cout << "zMax er: " << zMax << std::endl;
 	
 	while(scaleIt < preScaleCount)
 	{
-	    tempSurface = sge_CreateAlphaSurface(SDL_SWSURFACE, 
+	    tempSurface = sge_CreateAlphaSurface(SDL_HWSURFACE, 
 			    			scaleIt+1, scaleIt+1); 
 
-	    scale =  float(scaleIt) / preScaleCount;	
+	    scale =  float(scaleIt/2) / preScaleCount;	
 	   
 //	    std::cout << "scale: " << scale << "    scaleIt: " << scaleIt << std::endl;
 	    
-	    sge_transform(pic, tempSurface, 0, scale, scale, 0, 0, 0, 0, 0);
+	    sge_transform(pic, tempSurface, 0, scale, scale, 0, 0, 0, 0, SGE_TAA);
 
 	    scaledParticles[scaleIt] = tempSurface;
 	    scaleIt++;
@@ -94,11 +125,9 @@ void Stream::preScaleParticle(SDL_Surface* pic)
 
 void Stream::Render(SDL_Surface* screen)
 {
-	//std::cout << "Planer om å rendre litt da..." << std::endl;
 	static Uint32 count = 0;
 	Uint32	pCnt = 0;
 	Sint16  X,Y,Z;
-
 	
 	SDL_FillRect(screen,NULL,0);
 	Particle* particle;
@@ -106,12 +135,14 @@ void Stream::Render(SDL_Surface* screen)
 	while(pCnt < particleCount)
 	{
 		particle = particles[pCnt];
-		X  = (particle->xPos * 2250) / (particle->zPos + 1200);
-		Y  = (particle->yPos * 2250) / (particle->zPos + 1200);
-		Z  = (particle->zPos / 16);
+		X  = ((particle->xPos) * 750) / (particle->zPos + 460);
+		Y  = ((particle->yPos) * 790) / (particle->zPos + 460);
+		Z  = (particle->zPos/32);
 
+	//	X += (screen->w/2);
+	//	Y += (screen->h/2);
 		sge_BlitTransparent(scaledParticles[Z], screen, 0,0, X,Y, 
-							  Z,Z, 0,32);
+							  Z,Z, 0,8);
 		particle->Run(zMax);
 		pCnt++; 
 	}
