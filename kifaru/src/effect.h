@@ -27,6 +27,8 @@ public:
     virtual void    newTick(Uint32 ticks);
     virtual bool    isDone(Uint32 ticks);
 
+    virtual void    Init(AttrMap) = 0;
+
     virtual void    LoadBMP();
     virtual void    LoadPNG();
     
@@ -53,6 +55,7 @@ class Jall : public Effect
  public:
     Jall();
     ~Jall();
+    void Init(AttrMap);
     void Render (SDL_Surface*);
 };
 
@@ -63,6 +66,7 @@ class Jull : public Effect
  public:
     Jull();
     ~Jull();
+    void Init(AttrMap);
     void Render (SDL_Surface*);
 };
 
@@ -74,6 +78,7 @@ class TD : public Effect
  public:
     TD();
     ~TD();
+    void Init(AttrMap);
     void Render (SDL_Surface*, SDL_Surface*, Uint32, Uint32);
 
 };
@@ -86,11 +91,12 @@ class Image : public Effect
  public:
      Image();
     ~Image();
-    void Render(SDL_Surface*);
-        SDL_Surface* Scale(SDL_Surface*, float, float);
-    Uint32            xofs,yofs;
-    void    LoadBMP();
-    void    LoadPNG();
+    void          Init(AttrMap);
+    void          Render(SDL_Surface*);
+    SDL_Surface*  Scale(SDL_Surface*, float, float);
+    Uint32        xofs,yofs;
+    void          LoadBMP();
+    void          LoadPNG();
   
  
 };

@@ -121,8 +121,7 @@ void ScriptParser::on_start_element(const Glib::ustring &name,
 	effect->Ticks = string2int((char*)it->second.c_str());
 	std::cout << "Den varer i " << effect->Ticks << " ticks" << std::endl;
 
-	//TODO: Call Init() på effect
-	
+	effect->Init(attrmap);
 
 	effect_stack.top()->addEffect(effect);
 	break;

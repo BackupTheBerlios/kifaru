@@ -15,8 +15,6 @@ class ScriptParser : public xmlpp::SaxParser
     Scheduler *m_scheduler;
     bool parse_success;
 
-
-
 public:
     ScriptParser();
     int string2int(char *str);

@@ -20,8 +20,6 @@ namespace ephidrena
 Image::Image()
     : Effect("Image")
 {
-    
-     
     xofs=0;
     yofs=0;
 }
@@ -30,6 +28,21 @@ Image::~Image()
 {
     
 }    
+
+
+void Image::Init(AttrMap attrmap)
+{
+    AttrMap::const_iterator it;
+    
+    it = attrmap.find("filename");
+
+    this->fileName = (char*)it->second.c_str();
+    this->LoadPNG();
+    this->xofs = 0;
+    this->yofs = 24;
+
+}
+
 
 void Image::Render (SDL_Surface *screen)
 {
@@ -158,6 +171,12 @@ Jall::~Jall()
 }
 
 
+void Jall::Init(AttrMap attrmap)
+{
+
+}
+
+
 void Jall::Render(SDL_Surface *screen)
 {
     static float XSin=0,YSin=0;
@@ -209,6 +228,12 @@ Jull::~Jull()
 
 }
 
+
+void Jull::Init(AttrMap attrmap)
+{
+
+
+}
 
 void Jull::Render(SDL_Surface *screen)
 {

@@ -2,9 +2,8 @@
 
 <demo>
   <sequence>
-
-	<exit/>
-	<effect class="Jall" ticks="40"/>
-	<effect class="Jull" ticks="400"/>
+	<effect class="Image" ticks="100" filename="gfx/godpledd1.png"/>
+	<effect class="Jall"  ticks="40"/>
+	<effect class="Image" ticks="400" filename="gfx/alphapartikkel1.png"/>
 </sequence>
 </demo>

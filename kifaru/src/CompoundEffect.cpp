@@ -8,6 +8,13 @@ void CompoundEffect::addEffect(Effect *effect)
     effects.push_back(effect);
 }
 
+void CompoundEffect::Init(AttrMap attrmap)
+{
+
+}
+
+
+
 EffectSequence::EffectSequence()
     : CompoundEffect("EffectSequence")
 {

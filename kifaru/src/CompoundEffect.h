@@ -17,6 +17,7 @@ protected:
 
 public:
     void addEffect(Effect *effect);
+    void Init(AttrMap);
 
 protected:
     CompoundEffect(const char *name)
