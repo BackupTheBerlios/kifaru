@@ -6,6 +6,7 @@
 #include "config.h"
 #include "primitives.h"
 #include "inits.h"
+#include "EffectFactory.h"
 
 #include "effect.h"
 
@@ -78,7 +79,6 @@ SDL_Surface* Image::Scale(SDL_Surface *original, float xscale, float yscale)
       }
 
 }
-
 
 Effect::Effect()
 {
@@ -176,5 +176,8 @@ void Jall::Render(SDL_Surface *screen)
          
    
 }    
+
+REGISTER_EFFECT(Image);
+REGISTER_EFFECT(Jall);
 
 };
