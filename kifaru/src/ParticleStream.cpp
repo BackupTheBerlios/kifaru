@@ -1,6 +1,7 @@
 #include <iostream>
 #include <SDL/SDL.h>
 #include <SDL/sge.h>
+#include <cstdlib>
 #include "effect.h"
 #include "config.h"
 #include "ParticleStream.h"
@@ -11,100 +12,137 @@ namespace ephidrena {
 
 	extern SDL_Surface *screen;
 
-Particle::Particle()
+
+	Particle::Particle()
 {
 	alpha 		= 255;
 	gamma 		= 127;
 	colorkey	= 0;
-	speed		= 1;
+	speed		= 3;
 	weight		= 1;
 	magnetism	= 0;
-	xPos		= 0;
-	yPos		= 0;
-	zPos		= 0;
+	distance	= 200;
+	k		= 100;
 	trajectoryPos	= NULL;
+	
+	xPos = rand() %  799;
+	yPos = rand() %  599;
+	zPos = rand() %  2047;
 
 }
 
 Particle::~Particle()
 {
-	
 }
 
+void Particle::Run(Uint32 max)
+{
+	if(yPos < screen->h )
+		yPos += speed;
+	else
+		yPos  = 0;
+	
+	if(zPos < max )
+		zPos += speed;
+	else
+		zPos  = 0;
+}
 
 Stream::Stream()
     : Effect("Stream")
 {
-
+	this->preScaleCount = 256;
+	this->particleCount = 50;
+	this->zMax	    = 1023;
+	
 }
 
 Stream::~Stream()
 {
+	//delete[] particles;
 }
 	
 void Stream::preScaleParticle(SDL_Surface* pic)
 {
-	Uint32		 scaleIt = 0;
-	const Uint32	 scales  = 256;
-	float		 scale = 1;
-	SDL_Surface*	 tempSurface;
-	SDL_Surface*	 tempSurface2;
-    	SDL_PixelFormat* fmt = screen->format;
-	
-	while(scaleIt < scales)
-	{
-		//std::cout << "Mekker skalert partikkel nr. " << scaleIt << std::endl;
-		
-		tempSurface = sge_copy_surface(pic);
-		tempSurface2 = SDL_CreateRGBSurface(SDL_SWSURFACE, 
-							256, 256, 
-							32, 
-							fmt->Rmask, fmt->Gmask, 
-							fmt->Bmask, fmt->Amask);
-		scale = (float) (scaleIt + 1) / scales ;	
-		sge_transform( tempSurface, tempSurface2, 0, 
-					scale, scale,
-					0, 0,
-					0, 0,
-					0);
+	Uint32		scaleIt = 0;
+	float		scale = 1.0;
+	SDL_Surface*	tempSurface;
 
-		
-		scaledParticles[scaleIt] = tempSurface2;
-		scaleIt++;
+	std::cout << "preScaleCount er: " << preScaleCount << std::endl;
+	std::cout << "zMax er: " << zMax << std::endl;
+	
+	while(scaleIt < preScaleCount)
+	{
+	    tempSurface = sge_CreateAlphaSurface(SDL_SWSURFACE, 
+			    			scaleIt+1, scaleIt+1); 
+
+	    scale =  float(scaleIt) / preScaleCount;	
+	   
+//	    std::cout << "scale: " << scale << "    scaleIt: " << scaleIt << std::endl;
+	    
+	    sge_transform(pic, tempSurface, 0, scale, scale, 0, 0, 0, 0, 0);
+
+	    scaledParticles[scaleIt] = tempSurface;
+	    scaleIt++;
 	}
 
-	std::cout << "Ferdig med loopen!" << std::endl;
+	SDL_FreeSurface(pic);
 
-	return;
-	
+//	std::cout << std::endl << "Skalerte " << scaleIt-1 << " baller" << std::endl;
+
 }
 
-void Stream::Render(SDL_Surface* _screen)
+void Stream::Render(SDL_Surface* screen)
 {
+	//std::cout << "Planer om å rendre litt da..." << std::endl;
 	static Uint32 count = 0;
+	Uint32	pCnt = 0;
+	Sint16  X,Y,Z;
+
 	
-	if (count > 255)
-		count = 0;
+	SDL_FillRect(screen,NULL,0);
+	Particle* particle;
 	
-	std::cout << "Klar for å rendre partikkel " << count << std::endl;
-	
-	sge_Blit(scaledParticles[count], screen, 0,0, 10,10, 
-				256, 256);
-				//colorKey,255);
-	count++;
+	while(pCnt < particleCount)
+	{
+		particle = particles[pCnt];
+		X  = (particle->xPos * 2250) / (particle->zPos + 1200);
+		Y  = (particle->yPos * 2250) / (particle->zPos + 1200);
+		Z  = (particle->zPos / 16);
+
+		sge_BlitTransparent(scaledParticles[Z], screen, 0,0, X,Y, 
+							  Z,Z, 0,32);
+		particle->Run(zMax);
+		pCnt++; 
+	}
 }
 
 void Stream::Init(AttrMap)
 {
 	SDL_Surface* pic;
     	SDL_RWops *rwop;
-    	rwop = SDL_RWFromFile("gfx/alphapartikkel1.png", "rb");
-    	pic = IMG_LoadPNG_RW(rwop);
+	Uint32 pCnt = 0;
+    	
+	rwop = SDL_RWFromFile("gfx/alphapartikkel1.png", "rb");
+    	pic = SDL_ConvertSurface(IMG_LoadPNG_RW(rwop), screen->format, SDL_SWSURFACE);
+	
 	if(pic)
-	std::cout << "Vi har png!" << std::endl;
-	this->preScaleParticle(pic);
-	SDL_FreeSurface(pic);
-	std::cout << "Ferdig med Stream init!" << std::endl;
+		this->preScaleParticle(pic);
+	else
+	{	std::cout << "No alpha particle texture loaded!" << std::endl;
+		return;
+	}
+	//SDL_FreeSurface(pic);
+
+	while(pCnt < preScaleCount)
+	{
+		particles[pCnt] = new Particle();
+		Particle::Particle();
+		pCnt++;
+	}
+		
+	//std::cout << "Ferdig med Stream init!" << std::endl
+//		<< "Lagde " << pCnt << " partikler. " << std::endl;
 	return;
 }
 

@@ -20,9 +20,11 @@ private:
 public:
 	Particle();
 	~Particle();
-	void 		Init();
-	SDL_Surface*	getParticle();
+	void 		Init(SDL_Surface**);
+	void		Run(Uint32);
 	
+	Uint32		distance;
+	Uint32		k;
 	Uint32		alpha;
 	Uint32		gamma;
 	Uint32		colorkey;
@@ -48,17 +50,20 @@ public:
 	~Stream();
 	void		Render(SDL_Surface*);
 	void		Init(AttrMap);
-	SDL_Surface*	scaledParticles[256];
-	Particle*	particles;
-	Uint32		particleCount;
+
 	Uint32		fieldOfView;
-	Uint32		distance;
 	Uint32		speed;
 	Uint32		colorKey;
+	Uint32		preScaleCount;
+	Uint32		particleCount;
+	Uint32		zMax;
 	Uint8		alpha;
 	Uint8		alpha_max;
 	Uint8		alpha_min;
 	Uint8		gamma;
+	
+	SDL_Surface*	scaledParticles[256];
+	Particle*	particles[500];
 };
 
 };
