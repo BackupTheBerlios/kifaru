@@ -129,8 +129,6 @@ void ScriptParser::on_start_element(const Glib::ustring &name,
 	std::cout << " som varer i " << effect->Ticks << " ticks" << std::endl;
 
 	effect->Init(attrmap);
-
-	cout << "addEffect " << std::endl;
 	effect_stack.top()->addEffect(effect);
 	break;
     }

@@ -3,6 +3,7 @@
 #include <math.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
+#include <SDL/sge.h>
 #include "config.h"
 #include "primitives.h"
 #include "inits.h"
@@ -39,15 +40,11 @@ void Image::Init(AttrMap attrmap)
 {
     AttrMap::const_iterator it;
     
-    cout << "mekker attrmap!" << std::endl;
-    
     it = attrmap.find("filename");
     this->fileName = (char*)it->second.c_str();
-    cout << "hei!" << std::endl;
     this->LoadPNG();
     
    
-    cout << "hei!" << std::endl;
     it = attrmap.find("xofs");
     if (it != attrmap.end())
         this->xofs = str2int((char*)it->second.c_str());
@@ -76,8 +73,6 @@ void Image::Init(AttrMap attrmap)
     if(it !=attrmap.end())
 	    this->alpha = str2int((char*)it->second.c_str());
 
-    cout << "mekka attrmap!" << std::endl;
-	    
 }
 
 
