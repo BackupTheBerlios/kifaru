@@ -10,6 +10,7 @@
 #include "tools.h"
 #include "effect.h"
 #include "ImageProcessing.h"
+#include "ParticleStream.h"
 #include "SDL_rotozoom.h"
 
 using namespace std;
@@ -221,4 +222,5 @@ void Jull::Render(SDL_Surface *screen)
 REGISTER_EFFECT(Image);
 REGISTER_EFFECT(Jall);
 REGISTER_EFFECT(Jull);
+REGISTER_EFFECT(Stream);
 };

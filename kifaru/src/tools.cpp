@@ -3,9 +3,8 @@
 
 namespace ephidrena {
 
-	
-
-int str2int(const char* digit) {
+int str2int(const char* digit) 
+{
    int result = 0;
 
    //--- Convert each digit char and add into result.

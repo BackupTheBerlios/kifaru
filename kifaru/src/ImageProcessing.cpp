@@ -21,21 +21,31 @@ namespace ephidrena{
 Image::Image()
     : Effect("Image")
 {
+    SDL_PixelFormat*	fmt = screen->format;
+    int			w   = screen->w;
+    int			h   = screen->h;
+	
     this->xofs		= 0;
     this->yofs		= 0;
     this->scale		= 1.0;
     this->xscale	= 1.0;
     this->yscale	= 1.0;
     this->rotate	= 0.0;
-    this->alpha		= 128;
-    this->tfScreen	= SDL_CreateRGBSurface(SDL_SWSURFACE, screen->w, screen->h, 32, screen->format->Rmask, screen->format->Gmask, screen->format->Bmask, screen->format->Amask); 
-    this->workScreen	= SDL_CreateRGBSurface(SDL_SWSURFACE, screen->w, screen->h, 32, screen->format->Rmask, screen->format->Gmask, screen->format->Bmask, screen->format->Amask); 
-    this->pic		= SDL_CreateRGBSurface(SDL_SWSURFACE, screen->w, screen->h, 32, screen->format->Rmask, screen->format->Gmask, screen->format->Bmask, screen->format->Amask); 
+    this->alpha		= 255;
+    this->hasAlpha	= false;
+    
+    this->pic		= SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, 32,
+		    		fmt->Rmask, fmt->Gmask, fmt->Bmask, fmt->Amask); 
+    this->workScreen = this->pic;
+    
+    this->tfScreen	= SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, 32, 
+		    		fmt->Rmask, fmt->Gmask, fmt->Bmask, fmt->Amask); 
 }
 
 Image::~Image()
 {
-    
+   SDL_FreeSurface(this->pic);
+   SDL_FreeSurface(this->tfScreen);
 }    
 
 
@@ -73,32 +83,39 @@ void Image::Init(AttrMap attrmap)
 
     it = attrmap.find("alpha");
     if(it !=attrmap.end())
+    {
 	    this->alpha = str2int(it->second.c_str());
+	    this->hasAlpha = true;
+    }
 }
 
 
 void Image::Render (SDL_Surface *screen)
 {
-	Uint32 clear = 0x000000;
+	const Uint32 clear = 0x000000;
 	
         SDL_Rect dest;
-        dest.x = this->xofs;
-        dest.y = this->yofs;
+        dest.x = xofs;
+        dest.y = yofs;
 
 	if(scale || xscale || yscale || rotate)
 	{
-		sge_transform( this->pic, tfScreen, this->rotate, 
-					this->scale*this->xscale, this->scale*this->yscale,
-					-1*this->xofs, -1*this->yofs,
-					0,0,
+		sge_transform( pic, tfScreen, rotate, 
+					scale*xscale, scale*yscale,
+					pic->w/2, pic->h/2,
+					screen->w/2,screen->h/2,
 					0);
+		
+		workScreen = tfScreen;
 	}
 
-  //      SDL_BlitSurface(workScreen, NULL, screen, &dest);
-
-	sge_BlitTransparent(this->tfScreen, screen, 0,0, 0,0, 
+	if(hasAlpha)
+		sge_BlitTransparent(workScreen, screen, 0,0, 0,0, 
 				screen->w, screen->h,
-				clear,9);
+				clear,alpha);
+	else
+        	SDL_BlitSurface(workScreen, NULL, screen, &dest);
+
         return;
 }
 
@@ -113,8 +130,8 @@ void Image::LoadPNG()
 {
     SDL_RWops *rwop;
     rwop = SDL_RWFromFile(fileName, "rb");
-    this->pic = sge_copy_surface(IMG_LoadPNG_RW(rwop));
-    if (!this->pic) cout << "LoadPNG tryna!" << endl;
+    pic = sge_copy_surface(IMG_LoadPNG_RW(rwop));
+    if (!pic) cout << "LoadPNG tryna!" << endl;
 }
 
 

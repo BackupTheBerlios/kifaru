@@ -29,7 +29,6 @@ void Scheduler::EventHandler()
     Uint32 total_ticks;
 
     std::cerr << "Nå vil vi ha events!" << std::endl;
-
     
     root_effect->prepare();
 
@@ -53,7 +52,7 @@ void Scheduler::EventHandler()
 	    }
         }
 	
-	SDL_Delay(50);
+	//SDL_Delay(3);
     }
 
 out:

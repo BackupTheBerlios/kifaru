@@ -2,8 +2,6 @@
 
 <demo>
    <sequence>
-   	<effect class="Image" ticks="100" filename="gfx/rabalder1.png" />
-	<effect class="Image" ticks="299" xofs="400" yofs="0" scale="200" filename="/home/zixaq/grafikk/fortvilelse.png"/>
-	<effect class="Image" ticks="199" scale="200" filename="/home/zixaq/grafikk/devil.png"/>
+   	<effect class="Stream" ticks="65536"/>
    </sequence>
 </demo>

@@ -15,22 +15,24 @@ namespace ephidrena{
 
 class Image : public Effect
 {
+    const char *    m_name;
  private:
-     SDL_Surface  *pic;   
+    Uint32        xofs,yofs;
+    Uint32	  alpha;
+    bool	  hasAlpha;
+    float	  scale,xscale,yscale,rotate;
+    SDL_Surface   *workScreen; 
+    SDL_Surface	  *tfScreen; 
+ 
  public:
-     Image();
+    Image();
     ~Image();
     void          Init(AttrMap);
     void          Render(SDL_Surface*);
-    SDL_Surface*  Scale(SDL_Surface*, float, float);
-    Uint32        xofs,yofs;
-    Uint32	  alpha;
-    float	  scale,xscale,yscale,rotate;
     void          LoadBMP();
     void          LoadPNG();
+    SDL_Surface   *pic;   
 
-    SDL_Surface   *workScreen; 
-    SDL_Surface	  *tfScreen; 
 
 };
  

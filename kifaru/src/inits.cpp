@@ -37,12 +37,12 @@ void Init::SDL()
       return;
   }   
   
-  SDL_ShowCursor(0);   
+//  SDL_ShowCursor(0);   
   
   atexit(SDL_Quit);
   
-  screen = SDL_SetVideoMode(1280,1024 , 32, 
-                    SDL_HWSURFACE|SDL_HWPALETTE|SDL_DOUBLEBUF);
+  screen = SDL_SetVideoMode(1280,1024, 32, 
+                    SDL_SWSURFACE|SDL_HWPALETTE|SDL_DOUBLEBUF);
   if (screen==NULL)
   {
       cout << ("Fåkke satt videomode %s",SDL_GetError()) << endl;
