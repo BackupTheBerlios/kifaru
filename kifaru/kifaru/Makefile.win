@@ -1,0 +1,50 @@
+# Project: Kifaru
+# Makefile created by Dev-C++ 4.9.9.0
+
+CPP  = g++.exe -D__DEBUG__
+CC   = gcc.exe -D__DEBUG__
+WINDRES = windres.exe
+RES  = Kifaru_private.res
+OBJ  = main.o primitives.o audio.o inits.o timer.o scheduler.o effect.o $(RES)
+LINKOBJ  = main.o primitives.o audio.o inits.o timer.o scheduler.o effect.o $(RES)
+LIBS =  -L"C:/Dev-Cpp/lib" -L"C:/Dev-Cpp/lib/gcc-lib/mingw32/3.3.1" -L"C:/Dev-Cpp/lib" -lmingw32 -lSDLmain -lSDL -lSDL_mixer  -lSDL_image  -g3 
+INCS =  -I"C:/Dev-Cpp/include"  -I"C:/Dev-Cpp/include"  -I"C:/Dev-Cpp/include/c++/3.3.1/mingw32/bits"  -I"C:/Dev-Cpp/include/c++/3.3.1/backward" 
+CXXINCS =  -I"C:/Dev-Cpp/include/c++/3.3.1"  -I"C:/Dev-Cpp/include/c++/3.3.1/mingw32"  -I"C:/Dev-Cpp/include/c++/3.3.1/backward"  -I"C:/Dev-Cpp/lib/gcc-lib/mingw32/3.3.1/include"  -I"C:/Dev-Cpp/include"  -I"C:/Dev-Cpp/include"  -I"C:/Dev-Cpp/include/c++/3.3.1/mingw32/bits"  -I"C:/Dev-Cpp/include/c++/3.3.1/backward" 
+BIN  = Kifaru.exe
+CXXFLAGS = $(CXXINCS)   -O3 -funroll-loops -fomit-frame-pointer -fexpensive-optimizations -O2 -g3
+CFLAGS = $(INCS)   -O3 -funroll-loops -fomit-frame-pointer -fexpensive-optimizations -O2 -g3
+
+.PHONY: all all-before all-after clean clean-custom
+
+all: all-before Kifaru.exe all-after
+
+
+clean: clean-custom
+	rm -f $(OBJ) $(BIN)
+
+$(BIN): $(OBJ)
+	$(CPP) $(LINKOBJ) -o "Kifaru.exe" $(LIBS)
+
+main.o: main.cpp
+	$(CPP) -c main.cpp -o main.o $(CXXFLAGS)
+
+primitives.o: primitives.cpp
+	$(CPP) -c primitives.cpp -o primitives.o $(CXXFLAGS)
+
+audio.o: audio.cpp
+	$(CPP) -c audio.cpp -o audio.o $(CXXFLAGS)
+
+inits.o: inits.cpp
+	$(CPP) -c inits.cpp -o inits.o $(CXXFLAGS)
+
+timer.o: timer.cpp
+	$(CPP) -c timer.cpp -o timer.o $(CXXFLAGS)
+
+scheduler.o: scheduler.cpp
+	$(CPP) -c scheduler.cpp -o scheduler.o $(CXXFLAGS)
+
+effect.o: effect.cpp
+	$(CPP) -c effect.cpp -o effect.o $(CXXFLAGS)
+
+Kifaru_private.res: Kifaru_private.rc 
+	$(WINDRES) -i Kifaru_private.rc -I rc -o Kifaru_private.res -O coff 
