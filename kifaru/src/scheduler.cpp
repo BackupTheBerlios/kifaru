@@ -24,20 +24,21 @@ Scheduler::~Scheduler()
 void Scheduler::EventHandler()
 {
     SDL_Event event;
-    Uint32 total_ticks = 0;
+    Uint32 total_ticks;
 
     cerr << "Nå vil vi ha events!" << endl;
 
+    
     root_effect->prepare();
 
-    while (!root_effect->isDone(total_ticks)) {
-	cerr << "Skal rendre" << endl;
+    while (!root_effect->isDone(total_ticks)  ) {
+
 	root_effect->Render(screen);
-	cerr << "Har rendra" << endl;
 	SDL_Flip(screen);
 
 	while (SDL_PollEvent(&event)) {
 	    if (event.type == SDL_USEREVENT) {
+		//cout <<("%i\n",total_ticks);
 		total_ticks++;
 		root_effect->newTick(total_ticks);
 	    }

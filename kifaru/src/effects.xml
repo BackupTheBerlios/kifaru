@@ -2,7 +2,9 @@
 
 <demo>
   <sequence>
-    <effect class="Jall" ticks="50"/>
-    <effect class="Image"/>
-  </sequence>
+
+	<exit/>
+	<effect class="Jall" ticks="40"/>
+	<effect class="Jull" ticks="400"/>
+</sequence>
 </demo>

@@ -100,6 +100,14 @@ void Effect::Render(SDL_Surface *screen)
 void Effect::prepare()
 {
 
+    
+}
+
+int Effect::ticks()
+{
+    
+    return Ticks;
+
 }
 
 void Effect::newTick(Uint32 ticks)
@@ -107,9 +115,9 @@ void Effect::newTick(Uint32 ticks)
 
 }
 
-bool Effect::isDone(Uint32 ticks)
+bool Effect::isDone(Uint32 _ticks)
 {
-    return ticks > 705;
+    return _ticks > this->Ticks;
 }
 
 void Effect::LoadPNG()
@@ -190,7 +198,59 @@ void Jall::Render(SDL_Surface *screen)
    
 }    
 
+Jull::Jull()
+    : Effect("Jull")
+{
+
+}
+
+Jull::~Jull()
+{
+
+}
+
+
+void Jull::Render(SDL_Surface *screen)
+{
+    static float XSin=0,YSin=0;
+    static Uint8 vri=11;
+    static float vreng=53;
+    static Uint8 xs,ys;
+    static Uint8 t;
+    Uint32 x,y;
+    
+    SLock(screen);
+    
+    for( y=0; y<screen->h; y++ )
+    {
+        for ( x=0; x<screen->w; x++ )
+        {
+            t = vri+x+(y*ys);
+            PutPixel(screen,x, y, t/2,t/3,t/4);   
+        }
+        YSin += 0.7;
+            if (YSin > 1) YSin = -1;
+            ys = Uint8(sin (YSin)  );
+
+        //if (vri >= 255) vri=1;
+        vri++;
+        
+        vreng+=0.7;
+
+        //if (vreng >=256 ) vri=1;
+    
+    XSin+=0.13;
+    YSin+=0.15;
+ 
+    }        
+    
+     SULock(screen);
+ 
+         
+   
+}    
+
 REGISTER_EFFECT(Image);
 REGISTER_EFFECT(Jall);
-
+REGISTER_EFFECT(Jull);
 };

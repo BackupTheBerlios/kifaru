@@ -12,7 +12,9 @@ class Effect
 
 public:
     typedef std::map<std::string, std::string> AttrMap;
+    int             Ticks;
 
+    virtual int     ticks();
                     Effect(const char *name);
     virtual         ~Effect();
     void            SLock(SDL_Surface *screen);
@@ -51,6 +53,16 @@ class Jall : public Effect
  public:
     Jall();
     ~Jall();
+    void Render (SDL_Surface*);
+};
+
+class Jull : public Effect
+{
+ private:
+
+ public:
+    Jull();
+    ~Jull();
     void Render (SDL_Surface*);
 };
 
