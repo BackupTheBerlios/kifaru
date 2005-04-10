@@ -32,8 +32,8 @@ Particle::Particle()
 	
 	trajectoryPos	= NULL;
 	
-	xPos = Rnd(0, (screen->w-1)) - (screen->w/2);
-	yPos = Rnd(0, (screen->h-1)) - (screen->h/2);
+	xPos = Rnd(0, (screen->w/4)) - (screen->w/4);
+	yPos = Rnd(0, (screen->h/4)) - (screen->h/4);
 	zPos = Rnd(0,  ZMAX);
 
 }
@@ -58,26 +58,26 @@ void Particle::Resurrect()
 
 void Particle::Run()
 {
-	static Sint32 wMax = screen->w/2;
-	static Sint32 hMax = screen->w/2;
 	static Sint32 wMin = -(screen->w/2);
+	static Sint32 wMax = screen->w/2;
 	static Sint32 hMin = -(screen->h/2);
+	static Sint32 hMax = screen->h/8;
 
 	lifeSpan--;
 	if(!lifeSpan)
 		this->Resurrect();
 
-	this->Move(&xdir, &xPos, wMin, wMax, xspeed);
-	this->Move(&ydir, &yPos, hMin, hMax, yspeed);
-//	this->Move(&zdir, &zPos, 1, ZMAX-1 , zspeed);
-
- 	this->GravityPull(&ydir, &yPos, yspeed);	
+	this->ZField(&zPos, ZMAX, zspeed/6);
+	this->Move(&xdir, &xPos, wMin, wMax, xspeed/6);
+	this->Move(&ydir, &yPos, hMin, hMax, yspeed/2);
+	//this->Move(&zdir, &zPos, 1, ZMAX-1 , zspeed);
+//
+ 	//this->GravityPull(&ydir, &yPos, yspeed);	
 /*	
 	xPos+=screen->w/2;	
-	this->ZField(&xPos, screen->w, xspeed*8);
-	xPos-=screen->w/2;	
+	this->ZField(&xPos, screen->w, xspeed/3);
+	xPos-=screen->w/2;
 */
-	this->ZField(&zPos, ZMAX, zspeed/3);
 }
 
 void Particle::Move(bool* dir, int* pos, Sint32 min, Sint32 max, int speed)
@@ -89,7 +89,7 @@ void Particle::Move(bool* dir, int* pos, Sint32 min, Sint32 max, int speed)
 
 void Particle::ZField(Sint32* pos, int max, int speed)
 {
-	(*pos)-=4;
+	(*pos)-=speed+1;
 	*pos = *pos < 0 ? max : *pos;
 }
 
@@ -109,8 +109,8 @@ Stream::Stream()
 {
 	this->preScaleCount = ZSCALES;
 	this->particleCount = PARTICLES;
-	this->distance	    = 320;
-	this->k		    = 310;
+	this->distance	    = 200;
+	this->k		    = 100;
 	this->alpha	    = 255;	
 }
 
@@ -130,35 +130,28 @@ void Stream::Render(SDL_Surface* screen)
 	Uint32* sortedParticles[ZMAX];
 	Uint32	tmp1, tmp2;
 	SDL_Rect* dst;
-
-	
-	SDL_FillRect(screen,NULL,0);
 	Particle* particle;
 	
+	//SDL_FillRect(screen,NULL,0);
 	
-	pCnt = 0;
+	sge_Blit(backdrop,screen, 0,0, 0,0, screen->w,screen->h );
+	
 	while(pCnt < particleCount)
 	{
 		particle= particles[pCnt];
-		//scale = particle->zPos / 100;
-		//X  = (particle->xPos * k) / (particle->zPos + distance);
-		//Y  = (particle->yPos * k) / (particle->zPos + distance);
-		X = 100.0 * particle->xPos / (1.0 + particle->zPos);
-		Y = 100.0 * particle->yPos / (1.0 + particle->zPos);
-		Z  = ( particle->zPos *2) / (ZMAX / ZSCALES) ;
+		particle->Run();
 		
+		X = 500.0 * particle->xPos / (-1.0 + particle->zPos);
+		Y = 100.0 * particle->yPos / (1.0 - particle->zPos);
+		Z  = ( particle->zPos ) / (ZMAX / ZSCALES) ;
 		Z = Z > ZSCALES-1 ? ZSCALES-1 : Z;
 
-		X += (screen->w/2);
-		Y += (screen->h/2);
-
+		X += (screen->w);
+		//Y += (screen->h);
 		size = scaledSize[Z];
-		sge_BlitTransparent(scaledParticles[Z], screen, 0,0, X,Y, 
-							  size,size, 0,alpha);
-	/*	dst->x = X;
-		dst->y = Y;
-		SDL_BlitSurface(scaledParticles[Z], NULL, screen, dst);
-*/		particle->Run();
+		
+		sge_Blit(scaledParticles[Z], screen, 0,0, X,Y, 
+							  size,size);
 		pCnt++; 
 	}
 }
@@ -166,19 +159,22 @@ void Stream::Render(SDL_Surface* screen)
 void Stream::Init(AttrMap)
 {
 	SDL_Surface* pic;
+	SDL_Surface* tempSurface;
     	SDL_RWops *rwop;
 	Uint32 pCnt = 0;
     	
 	//pic = sge_CreateAlphaSurface(SDL_SWSURFACE, 
 	//		    			scaleIt, scaleIt); 
 
+
 	rwop = SDL_RWFromFile("gfx/alphapartikkel1.png", "rb");
+//	rwop = SDL_RWFromFile("/home/nerve/gfx/mikroba1.png", "rb");
+    	pic = SDL_DisplayFormatAlpha(IMG_LoadPNG_RW(rwop));
 
-
-	
-    	pic = SDL_ConvertSurface(IMG_LoadPNG_RW(rwop), screen->format, 
-					SDL_SWSURFACE);
-	//pic = IMG_LoadPNG_RW(rwop);	
+	rwop = SDL_RWFromFile("/home/nerve/gfx/solisplanum2.png", "rb");
+	tempSurface = SDL_DisplayFormatAlpha(IMG_LoadPNG_RW(rwop));
+//	sge_transform(tempSurface, backdrop, 0, 0.5, 0.5, 0, 0, 0, 0, SGE_TAA | SGE_TSAFE);
+	backdrop = tempSurface;
 	
 
 	if(pic)
@@ -210,16 +206,16 @@ void Stream::preScaleParticle(SDL_Surface* pic)
 	    tempSurface = sge_CreateAlphaSurface(SDL_SWSURFACE, 
 			    			scaleIt, scaleIt); 
 
-	    scale = (float) (scaleIt/4) / ZSCALES;
+	    scale = (float) (scaleIt / 8) / ZSCALES;
 	   
-	    sge_transform(pic, tempSurface, 0, scale , scale , 0, 0, 0, 0, 0);
+	    sge_transform(pic, tempSurface, 0, scale , scale , 0, 0, 0, 0, SGE_TAA | SGE_TSAFE);
+	    shadeSurface(tempSurface, ZSCALES - scaleIt);
 	    if(scaleIt < 48)
 	    	blurSurface(tempSurface,5);
-	    if(scaleIt > 80)
-		blurSurface(tempSurface,scaleIt/10);
-	    //shadeSurface(tempSurface,cnt/4);
+	    if(scaleIt > 64)
+		blurSurface(tempSurface,scaleIt);
 	    scaledParticles[cnt] = tempSurface;
-	    scaledSize[cnt] = scaleIt/2;
+	    scaledSize[cnt] = scaleIt;
 	    scaleIt--;
 	    cnt++;
 	}
@@ -267,16 +263,12 @@ void Stream::blurSurface(SDL_Surface* pic, int amount)
 			bVal = (b + b1 + b2 + b3 + b4) / 5.0;
 			aVal = (a + a1 + a2 + a3 + a4) / 5.0; 
 
-			rVal = rVal > 255 ? 255 : rVal;
-			gVal = gVal > 255 ? 255 : gVal;
-			bVal = bVal > 255 ? 255 : bVal;
-			
-			r = (Uint8) rVal;
-			g = (Uint8) gVal;
-			b = (Uint8) bVal;
-			a = (Uint8) aVal;
+			r = (Uint8) (rVal < 255 ? rVal : 255);
+			g = (Uint8) (gVal < 255 ? gVal : 255);
+			b = (Uint8) (bVal < 255 ? bVal : 255);
+			a = (Uint8) (aVal < 255 ? aVal : 255);
 		
-			*pixel = a && (r+g+b) ? SDL_MapRGBA(fmt, r, g, b, 128) : 0;
+			*pixel = a && (r+g+b) ? SDL_MapRGBA(fmt, r, g, b, a) : 0;
 		    }
 	    }
 
@@ -290,10 +282,7 @@ void Stream::blurSurface(SDL_Surface* pic, int amount)
 void Stream::shadeSurface(SDL_Surface* pic, int amount)
 {
 	SDL_PixelFormat *fmt;
-	Sint32		rVal, gVal, bVal, aVal;
 	Sint32		xl,yl;
-	Uint32		ld = pic->w;
-	Uint32		lu = -(ld);
 	Uint8		r,g,b,a;
 	Uint32*		pixels;
 	Uint32*		pixel;
@@ -301,38 +290,26 @@ void Stream::shadeSurface(SDL_Surface* pic, int amount)
 
 	SDL_LockSurface(pic);
 	pixels = (Uint32*)pic->pixels;		
-	if(pixels == NULL)
+	if(!pixels)
 		return;
-	
-	fmt = pic->format;
 
-	    for(yl=1; yl < pic->h-2; yl++)
-	    {
-		for(xl =1; xl < pic->w-2; xl++)
+	amount *=4;
+	
+	fmt = screen->format;
+
+	for(yl=0; yl < pic->h-1; yl++)
+	{
+		for(xl =0; xl < pic->w-1; xl++)
 		{
 			pixel = pixels + xl + (yl*pic->w);
-			SDL_GetRGBA(*pixel,      fmt, &r,  &g,  &b,  &a);
-
-			rVal = r-amount;
-			gVal = g-amount; 
-			bVal = b-amount;
-			aVal = a;
-
-			if(rVal < 0)
-				rVal = 0;
-			if(gVal < 0)
-				gVal = 0;
-			if(bVal < 0)
-				bVal = 0;
-			
-			r = (Uint8) rVal;
-			g = (Uint8) gVal;
-			b = (Uint8) bVal;
-			a = (Uint8) aVal;
-		
-			*pixel = a && (r+g+b) ? SDL_MapRGBA(fmt, r, g, b, 128) : 0;
-		    }
-	   cnt++;;
+			SDL_GetRGBA(*pixel, pic->format, &r,  &g,  &b,  &a);
+			r = r - amount > 0 ? r - amount : 0;
+			g = g - amount > 0 ? g - amount : 0; 
+			b = b - amount > 0 ? b - amount : 0;
+	/*hack*/	a = ((r + g + b ) / 3 )- amount > 0 ? ((r + g + b )) / 3 - amount : 0; 
+			*pixel = a ? SDL_MapRGBA(pic->format, r, g, b, a) : 0;
+		 }	
+	cnt++;;
 	}
 	
 	SDL_UnlockSurface(pic);

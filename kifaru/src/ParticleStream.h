@@ -9,8 +9,8 @@
 #include "tools.h"
 
 #define ZMAX 1024
-#define ZSCALES 128
-#define PARTICLES 200
+#define ZSCALES 64
+#define PARTICLES 700
 
 namespace ephidrena{
 
@@ -42,6 +42,7 @@ public:
 	Uint32		age;
 	Uint32		lifeSpan;
 	Uint32*		trajectoryPos;
+
 };
 
 class Stream : public Effect
@@ -52,6 +53,7 @@ private:
 	void		drawParticles();
 	void		preScaleParticle(SDL_Surface*);
 	void		blurSurface(SDL_Surface*, int);
+	void		shadeSurface(SDL_Surface*, int);
 	Uint32*		currentParticle;	
 	SDL_Surface	workScreen();
 	Uint32		distance;
@@ -72,6 +74,7 @@ public:
 	Uint8		alpha_min;
 	Uint8		gamma;
 	
+	SDL_Surface*	backdrop;
 	SDL_Surface*	scaledParticles[ZSCALES];
 	Uint32		scaledSize[ZSCALES];
 	Particle*	particles[PARTICLES];
