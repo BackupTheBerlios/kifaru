@@ -8,9 +8,9 @@
 #include "primitives.h"
 #include "tools.h"
 
-#define ZMAX 1024
-#define ZSCALES 64
-#define PARTICLES 700
+#define ZMAX 2048
+#define ZSCALES 32
+#define PARTICLES 2000
 
 namespace ephidrena{
 
@@ -62,7 +62,7 @@ public:
 	Stream();
 	~Stream();
 	void		Render(SDL_Surface*);
-	void		Init(AttrMap);
+	bool		Init(AttrMap);
 
 	Uint32		fieldOfView;
 	Uint32		speed;

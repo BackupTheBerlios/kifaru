@@ -1,9 +1,6 @@
 #include <iostream>
 #include <stdlib.h>
 #include <math.h>
-#include <SDL/SDL.h>
-#include <SDL/SDL_image.h>
-#include <SDL/sge.h>
 #include "config.h"
 #include "primitives.h"
 #include "inits.h"
@@ -11,7 +8,7 @@
 #include "tools.h"
 #include "effect.h"
 #include "ImageProcessing.h"
-#include "SDL_rotozoom.h"
+//#include "SDL_rotozoom.h"
 
 using namespace std;
 
@@ -49,7 +46,7 @@ Image::~Image()
 }    
 
 
-void Image::Init(AttrMap attrmap)
+bool Image::Init(AttrMap attrmap)
 {
     AttrMap::const_iterator it;
     
@@ -87,6 +84,8 @@ void Image::Init(AttrMap attrmap)
 	    this->alpha = str2int(it->second.c_str());
 	    this->hasAlpha = true;
     }
+    
+    return true;
 }
 
 

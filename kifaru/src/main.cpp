@@ -16,21 +16,23 @@ int main(int argc, char *argv[])
     Audio audio;
     Timer timer;
     Scheduler scheduler;
-    ScriptParser parser;
-   
+    ScriptParser parser; 
+
     init.SDL();
-    timer.Install();
-    audio.InitOgg("/home/zixaq/musikk/disparagement_disorder.ogg");
-    audio.InitOgg("msx/wireframes.ogg");
-    audio.InitOgg("msx/Sursum_Corda.ogg");
     
-    if (!parser.parse("effects.xml", &scheduler)) {
-//	cerr << "Failed to parse script" << endl;
-//	return 1;
+    if (!parser.parse("effects.xml", &scheduler))
+    {
+	cerr << "Failed to parse script" << endl;
+	return 1;
     }
-    
+    else
+        cerr << "Script parsed OK." << endl;
+        
+    timer.Install();
+    audio.InitOgg("data/svart.ogg");
     audio.PlayOgg();
     scheduler.EventHandler();
+    
     return 0;
 }
 

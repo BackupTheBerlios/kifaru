@@ -7,8 +7,8 @@
 #include "config.h"
 #include "primitives.h"
 #include "tools.h"
-#include "SDL_rotozoom.h"
-#include "SDL_gfxPrimitives.h"
+//#include "SDL_rotozoom.h"
+//#include "SDL_gfxPrimitives.h"
 
 
 namespace ephidrena{
@@ -27,7 +27,7 @@ class Image : public Effect
  public:
     Image();
     ~Image();
-    void          Init(AttrMap);
+    bool          Init(AttrMap);
     void          Render(SDL_Surface*);
     void          LoadBMP();
     void          LoadPNG();

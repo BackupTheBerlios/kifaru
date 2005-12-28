@@ -59,33 +59,27 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-host_alias = @host_alias@
-host_triplet = @host@
 
 EXEEXT = @EXEEXT@
 OBJEXT = @OBJEXT@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 AMTAR = @AMTAR@
 AWK = @AWK@
-CC = @CC@
+CPP = @CPP@
 CXX = @CXX@
 DEPDIR = @DEPDIR@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
+LN_S = @LN_S@
 PACKAGE = @PACKAGE@
-PKG_CONFIG = @PKG_CONFIG@
-SDL_CFLAGS = @SDL_CFLAGS@
-SDL_CONFIG = @SDL_CONFIG@
-SDL_LIBS = @SDL_LIBS@
 STRIP = @STRIP@
 VERSION = @VERSION@
-XML2_CONFIG = @XML2_CONFIG@
-XML_CPPFLAGS = @XML_CPPFLAGS@
-XML_LIBS = @XML_LIBS@
 am__include = @am__include@
 am__quote = @am__quote@
 install_sh = @install_sh@
 noinst_PROGRAMS := kifaru
-kifaru_SOURCES = main.cpp effect.cpp audio.cpp scheduler.cpp timer.cpp primitives.cpp inits.cpp EffectFactory.cpp ScriptParser.cpp CompoundEffect.cpp tools.cpp ImageProcessing.cpp
+kifaru_SOURCES = main.cpp effect.cpp audio.cpp scheduler.cpp timer.cpp tinyhml.h primitives.cpp inits.cpp EffectFactory.cpp ScriptParser.cpp CompoundEffect.cpp tools.cpp ImageProcessing.cpp ParticleStream.cpp tinyxml.cpp tinystr.cpp tinyxmlerror.cpp tinyxmlparser.cpp Engine.cpp EngineTest.cpp
+kifaru_LDADD := -lSDLmain -lSDL -lSDL_mixer -lSGE -lSDL_image 
+kifaru_LDFLAGS := -mnocygwin -mcpu=i686 -msse 
 subdir = src
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_CLEAN_FILES =
@@ -96,11 +90,11 @@ am_kifaru_OBJECTS = main.$(OBJEXT) effect.$(OBJEXT) audio.$(OBJEXT) \
 	scheduler.$(OBJEXT) timer.$(OBJEXT) primitives.$(OBJEXT) \
 	inits.$(OBJEXT) EffectFactory.$(OBJEXT) ScriptParser.$(OBJEXT) \
 	CompoundEffect.$(OBJEXT) tools.$(OBJEXT) \
-	ImageProcessing.$(OBJEXT)
+	ImageProcessing.$(OBJEXT) ParticleStream.$(OBJEXT) \
+	tinyxml.$(OBJEXT) tinystr.$(OBJEXT) tinyxmlerror.$(OBJEXT) \
+	tinyxmlparser.$(OBJEXT) Engine.$(OBJEXT) EngineTest.$(OBJEXT)
 kifaru_OBJECTS = $(am_kifaru_OBJECTS)
-kifaru_LDADD = $(LDADD)
 kifaru_DEPENDENCIES =
-kifaru_LDFLAGS =
 
 DEFS = @DEFS@
 DEFAULT_INCLUDES =  -I. -I$(srcdir)
@@ -110,19 +104,28 @@ LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
 @AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/CompoundEffect.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/EffectFactory.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/EffectFactory.Po ./$(DEPDIR)/Engine.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/EngineTest.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/ImageProcessing.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/ParticleStream.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/ScriptParser.Po ./$(DEPDIR)/audio.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/effect.Po ./$(DEPDIR)/inits.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/main.Po ./$(DEPDIR)/primitives.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/scheduler.Po ./$(DEPDIR)/timer.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/tools.Po
+@AMDEP_TRUE@	./$(DEPDIR)/tinystr.Po ./$(DEPDIR)/tinyxml.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/tinyxmlerror.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/tinyxmlparser.Po ./$(DEPDIR)/tools.Po
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 CXXLD = $(CXX)
 CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
 	-o $@
 CXXFLAGS = @CXXFLAGS@
+CFLAGS = @CFLAGS@
+COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
+	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+CCLD = $(CC)
+LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 DIST_SOURCES = $(kifaru_SOURCES)
 DIST_COMMON = Makefile.am Makefile.in
 SOURCES = $(kifaru_SOURCES)
@@ -131,7 +134,7 @@ all: all-am
 
 .SUFFIXES:
 .SUFFIXES: .cpp .o .obj
-$(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
+$(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.ac $(ACLOCAL_M4)
 	cd $(top_srcdir) && \
 	  $(AUTOMAKE) --gnu  src/Makefile
 Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
@@ -151,7 +154,10 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/CompoundEffect.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/EffectFactory.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Engine.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/EngineTest.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ImageProcessing.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ParticleStream.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ScriptParser.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audio.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/effect.Po@am__quote@
@@ -160,6 +166,10 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/primitives.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/scheduler.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/timer.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tinystr.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tinyxml.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tinyxmlerror.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tinyxmlparser.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tools.Po@am__quote@
 
 distclean-depend:

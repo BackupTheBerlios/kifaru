@@ -1,3 +1,4 @@
+#include <iostream>
 #include "CompoundEffect.h"
 
 namespace ephidrena
@@ -8,9 +9,9 @@ void CompoundEffect::addEffect(Effect *effect)
     effects.push_back(effect);
 }
 
-void CompoundEffect::Init(AttrMap attrmap)
+bool CompoundEffect::Init(AttrMap attrmap)
 {
-
+     return true;
 }
 
 

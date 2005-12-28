@@ -11,7 +11,7 @@
 #include "effect.h"
 #include "ImageProcessing.h"
 #include "ParticleStream.h"
-#include "SDL_rotozoom.h"
+//#include "SDL_rotozoom.h"
 
 using namespace std;
 
@@ -115,9 +115,10 @@ Jall::~Jall()
 }
 
 
-void Jall::Init(AttrMap attrmap)
+bool Jall::Init(AttrMap attrmap)
 {
-
+     
+     return true;
 }
 
 
@@ -173,10 +174,10 @@ Jull::~Jull()
 }
 
 
-void Jull::Init(AttrMap attrmap)
+bool Jull::Init(AttrMap attrmap)
 {
 
-
+     return true;
 }
 
 void Jull::Render(SDL_Surface *screen)

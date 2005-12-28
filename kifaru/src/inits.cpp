@@ -39,8 +39,8 @@ void Init::SDL()
   
   atexit(SDL_Quit);
   
-  screen = SDL_SetVideoMode(700,525, 32, 
-                    SDL_FULLSCREEN|SDL_SWSURFACE|SDL_HWACCEL|SDL_RLEACCEL|SDL_DOUBLEBUF);
+  screen = SDL_SetVideoMode(800, 600, 32, 
+                    SDL_SWSURFACE|SDL_DOUBLEBUF);
   if (screen==NULL)
   {
       cout << ("Fåkke satt videomode %s",SDL_GetError()) << endl;
