@@ -7,8 +7,6 @@
 #include "scheduler.h"
 #include "effect.h"
 #include "inits.h"
-//#include "tools.h"
-//#include "tools.cpp"
 
 using namespace std;
 
@@ -27,35 +25,39 @@ Scheduler::~Scheduler()
 
 void Scheduler::EventHandler()
 {
-    SDL_Event event;
-    Uint32 total_ticks;
+	SDL_Event event;
+	Uint32 total_ticks;
 
-    std::cerr << "Nå vil vi ha events!" << std::endl;
+	std::cerr << "Nå vil vi ha events!" << std::endl;
     
-    root_effect->prepare();
+	root_effect->prepare();
 
-    while (!root_effect->isDone(total_ticks)  ) {
+	while (!root_effect->isDone(total_ticks)  )
+	{
+		root_effect->Render(screen);
+		SDL_Flip(screen);
+		SDL_Delay(1);
 
-	root_effect->Render(screen);
-	SDL_Flip(screen);
-	SDL_Delay(1);
-
-	while (SDL_PollEvent(&event)) {
-	    if (event.type == SDL_USEREVENT) {
-		//cout <<("%i\n",total_ticks);
-		total_ticks++;
-		root_effect->newTick(total_ticks);
-	    }
-	    if (event.type == SDL_QUIT )
-		goto out;
-	    if (event.type == SDL_KEYDOWN) {
-		if (event.key.keysym.sym == SDLK_ESCAPE
-		    || event.key.keysym.sym == SDLK_SPACE)
-		    goto out;
-	    }
-        }
+		while (SDL_PollEvent(&event)) 
+		{
+			if (event.type == SDL_USEREVENT)
+			{
+				//cout <<("%i\n",total_ticks);
+				total_ticks++;
+				root_effect->newTick(total_ticks);
+	    		}
+			
+		if (event.type == SDL_QUIT )
+			goto out;
+		if (event.type == SDL_KEYDOWN)
+		{
+			if (event.key.keysym.sym == SDLK_ESCAPE
+			|| event.key.keysym.sym == SDLK_SPACE)
+				goto out;
+		}
+	}
 	
-    }
+}
 
 out:
     return;

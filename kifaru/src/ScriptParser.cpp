@@ -13,34 +13,34 @@ namespace ephidrena
 
 enum Tags 
 {
-    t_Empty,
-    t_Sequence,
-    t_Parallel,
-    t_Effect,
-    t_Exit
+	t_Empty,
+	t_Sequence,
+	t_Parallel,
+	t_Effect,
+	t_Exit
 };
 
 static std::map<std::string, Tags> s_mapTags;
 
 void InitEnum()
 {
-    s_mapTags["empty"]    = t_Empty;
-    s_mapTags["sequence"] = t_Sequence;
-    s_mapTags["parallel"] = t_Parallel;
-    s_mapTags["effect"]   = t_Effect;
-    s_mapTags["exit"]     = t_Exit;
+	s_mapTags["empty"]    = t_Empty;
+	s_mapTags["sequence"] = t_Sequence;
+	s_mapTags["parallel"] = t_Parallel;
+	s_mapTags["effect"]   = t_Effect;
+	s_mapTags["exit"]     = t_Exit;
 }
 
 
 ScriptParser::ScriptParser()
 {
-    InitEnum();
+	InitEnum();
 }
 
 bool ScriptParser::parse(const char *filename, Scheduler *sched)
 {
 	m_scheduler = sched;
-	TiXmlDocument     *script = new TiXmlDocument(filename);
+	TiXmlDocument *script = new TiXmlDocument(filename);
 	CompoundEffect *ce = NULL; 
 	Effect *effect;
     	TiXmlElement *demo = NULL;
@@ -49,27 +49,25 @@ bool ScriptParser::parse(const char *filename, Scheduler *sched)
     	int elemCount = 0;
     
     	if(!script->LoadFile())
-    	{
-       		cerr << "Script failed to load!" << endl; 
-       		delete script;
+	{
+		cerr << "Script failed to load!" << endl; 
+		delete script;
 		return false;
-       	}
+	}
 
-    	demo = script->FirstChildElement("demo");
-    	if(!demo)
+	demo = script->FirstChildElement("demo");
+	if(!demo)
 		goto parseError;
 	
 	sequence = demo->FirstChild("sequence");
 	elements = 0;
 	if(!parseElement(sequence,ce))
-			goto parseError;
+		goto parseError;
 
 	while(elements = sequence->IterateChildren(elements))
 	{
 		if(!parseElement(elements,ce))
 			goto parseError;
-	cout << "jall" << endl;
-
  	}
 	effect_stack.pop();
 	
@@ -84,91 +82,88 @@ parseError:
 bool ScriptParser::parseElement(TiXmlNode *elements, CompoundEffect *ce)
 {
 
-    Effect *effect;
+	Effect *effect;
 
-    s_mapTags["empty"]    = t_Empty;
-    s_mapTags["sequence"] = t_Sequence;
-    s_mapTags["parallel"] = t_Parallel;
-    s_mapTags["effect"]   = t_Effect;
-    s_mapTags["exit"]     = t_Exit;
+	s_mapTags["empty"]    = t_Empty;
+	s_mapTags["sequence"] = t_Sequence;
+	s_mapTags["parallel"] = t_Parallel;
+	s_mapTags["effect"]   = t_Effect;
+	s_mapTags["exit"]     = t_Exit;
 
-    
-    switch(s_mapTags[elements->Value()])
-    {
-
-    case t_Exit :
-        std::cerr << "Found exit!" << std::endl;
-        break;
-
-    case t_Sequence :
-        std::cerr << "Found sequence" << std::endl;
-        ce = new EffectSequence;
-        effect = ce;
-        break;
-
-
-    case t_Parallel :
-        std::cerr << "Found parallel" << std::endl;
-        ce = new ParallelEffect;
-        effect = ce;
-        break;
-
-   case t_Effect :
-	std::cerr << "Found effect" << std::endl;
-
-        if (effect_stack.empty()) 
+	switch(s_mapTags[elements->Value()])
 	{
-            std::cerr << "<effect> can only be used inside <parallel> or <sequence>"
-                      << std::endl;
-            return false;
-        }
-        Effect::AttrMap attrmap;
-	TiXmlAttribute* attr;
-    	attr = elements->ToElement()->FirstAttribute();
-	while(attr)    
-    	{
-        	cout << attr->Name() << "=" << attr->Value() << endl;
-		attrmap.insert(
+	case t_Exit :
+        	std::cerr << "Found exit!" << std::endl;
+        	break;
+
+    	case t_Sequence :
+        	std::cerr << "Found sequence" << std::endl;
+        	ce = new EffectSequence;
+        	effect = ce;
+        	break;
+
+	case t_Parallel :
+		std::cerr << "Found parallel" << std::endl;
+		ce = new ParallelEffect;
+		effect = ce;
+		break;
+
+	case t_Effect :
+		std::cerr << "Found effect" << std::endl;
+
+		if (effect_stack.empty()) 
+		{
+			std::cerr << "<effect> can only be used inside <parallel> or <sequence>"
+				<< std::endl;
+			return false;
+		}
+		
+		Effect::AttrMap attrmap;
+		TiXmlAttribute* attr;
+		attr = elements->ToElement()->FirstAttribute();
+		
+		while(attr)    
+		{
+			cout << attr->Name() << "=" << attr->Value() << endl;
+			attrmap.insert(
 			Effect::AttrMap::value_type(
 				attr->Name(), attr->Value() ) );
-        	attr = attr->Next();
-	}
+			attr = attr->Next();
+		}
 	
+        	Effect::AttrMap::const_iterator it = attrmap.find("class");
+		
+		if (it == attrmap.end()) 
+		{
+            		std::cerr << "<effect> with no name" << std::endl;
+            		return false;
+		}
 
-        Effect::AttrMap::const_iterator it;
+		std::cerr << "Mekker effekt av typen " << it->second;
 
-        it = attrmap.find("class");
-        if (it == attrmap.end()) {
-            std::cerr << "<effect> with no name" << std::endl;
-            return false;
-        }
+		effect = EffectFactory::instance()->createEffect(it->second.c_str());
 
-        std::cerr << "Mekker effekt av typen " << it->second;
+		it = attrmap.find("ticks");
+		if (it != attrmap.end())
+			effect->Ticks = str2int((char*)it->second.c_str());
+		else
+			effect-> Ticks = 65535;
 
-        effect = EffectFactory::instance()->createEffect(it->second.c_str());
+		std::cout << " som varer i " << effect->Ticks << " ticks" << std::endl;
 
-        it = attrmap.find("ticks");
-        if (it != attrmap.end())
-                effect->Ticks = str2int((char*)it->second.c_str());
-        else
-                effect-> Ticks = 65535;
-
-        std::cout << " som varer i " << effect->Ticks << " ticks" << std::endl;
-
-        effect->Init(attrmap);
-        effect_stack.top()->addEffect(effect);
-        break;
+		effect->Init(attrmap);
+		effect_stack.top()->addEffect(effect);
+		break;
 	}
 			
-	if (ce )
+	if (ce)
 	{
 		if (effect_stack.empty())
-       			m_scheduler->setRoot(ce);
-       		std::cerr << "Pusher effektgjeng" << std::endl;
-       		effect_stack.push(ce);
+			m_scheduler->setRoot(ce);
+		std::cerr << "Pusher effektgjeng" << std::endl;
+		effect_stack.push(ce);
 	}
 	return true;
-	
 }
-	
+
 }

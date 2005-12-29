@@ -29,26 +29,26 @@ Init::~Init()
 void Init::SDL()
 {
 
- if( SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO|SDL_INIT_TIMER) <0)
-  {
-      cout << ("Detta suger! Fåkke opp SDL. Feilkode: %s", SDL_GetError()) << endl;
-      return;
-  }   
+	if( SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO|SDL_INIT_TIMER) <0)
+	{
+		cout << ("Detta suger! Fåkke opp SDL. Feilkode: %s", SDL_GetError()) << endl;
+		return;
+	}   
   
 //  SDL_ShowCursor(0);   
   
-  atexit(SDL_Quit);
+	atexit(SDL_Quit);
   
-  screen = SDL_SetVideoMode(800, 600, 32, 
+	screen = SDL_SetVideoMode(800, 600, 32, 
                     SDL_SWSURFACE|SDL_DOUBLEBUF);
-  if (screen==NULL)
-  {
-      cout << ("Fåkke satt videomode %s",SDL_GetError()) << endl;
-      return;
-  }
+	if (screen==NULL)
+	{
+		cout << ("Fåkke satt videomode %s",SDL_GetError()) << endl;
+		return;
+	}
   
-  cout << ("Kliner til!") << endl;    
-  return;
+	cout << ("Kliner til!") << endl;    
+	return;
 }
 
 };

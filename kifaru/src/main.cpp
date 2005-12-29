@@ -12,28 +12,29 @@ using namespace ephidrena;
 
 int main(int argc, char *argv[])
 {
-    Init init;
-    Audio audio;
-    Timer timer;
-    Scheduler scheduler;
-    ScriptParser parser; 
+	Init init;
+	Audio audio;
+	Timer timer;
+	Scheduler scheduler;
+	ScriptParser parser; 
 
-    init.SDL();
+	init.SDL();
     
-    if (!parser.parse("effects.xml", &scheduler))
-    {
-	cerr << "Failed to parse script" << endl;
-	return 1;
-    }
-    else
-        cerr << "Script parsed OK." << endl;
+	if (!parser.parse("effects.xml", &scheduler))
+	{
+		cerr << "Failed to parse script" << endl;
+		return 1;
+	}
+	else
+        	cerr << "Script parsed OK." << endl;
         
-    timer.Install();
-    audio.InitOgg("data/svart.ogg");
-    audio.PlayOgg();
-    scheduler.EventHandler();
+	timer.Install();
+	audio.InitOgg("data/svart.ogg");
+	audio.PlayOgg();
+	scheduler.EventHandler();
     
-    return 0;
+	return 0;
 }
+
 
 

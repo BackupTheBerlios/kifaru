@@ -32,33 +32,32 @@ namespace ephidrena
 
 Audio::Audio()
 {
-
     
 }
 
 Audio::~Audio()
 {
-    Mix_FreeMusic(musikk);
+	Mix_FreeMusic(musikk);
 }     
               
 
 void Audio::InitOgg(const char filnavn[])
 {
-    Rate=22050;
-    Format=AUDIO_S16;
-    Channels=2;
-    Buffers=4096;
+	Rate = 22050;
+	Format = AUDIO_S16;
+	Channels = 2;
+	Buffers = 4096;
     
-    if ( Mix_OpenAudio (Rate, Format, Channels, Buffers)) cerr << "SDL_mixer sliter!" << endl;
+	if ( Mix_OpenAudio (Rate, Format, Channels, Buffers)) 
+		cerr << "Unable to open audio device!" << endl;
 
 #ifdef debug
-    cerr << Mix_QuerySpec(&Rate, &Format, &Channels);
+	cerr << Mix_QuerySpec(&Rate, &Format, &Channels);
 #endif
 
-    musikk = Mix_LoadMUS(filnavn);
-    //Mix_HookMusicFinished(musikkferdig);
-    
-    Mix_Volume(-1,MIX_MAX_VOLUME-(MIX_MAX_VOLUME/10));
+	musikk = Mix_LoadMUS(filnavn);
+	//Mix_HookMusicFinished(musikkferdig);
+	Mix_Volume(-1,MIX_MAX_VOLUME-(MIX_MAX_VOLUME/10));
 }
 
 void Audio::PlayOgg()

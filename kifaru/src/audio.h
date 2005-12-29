@@ -5,18 +5,18 @@ namespace ephidrena {
 
 class Audio
 {
-private:
+ private:
 
-    int Rate,Channels,Buffers;
-    Uint16 Format; 
-    Mix_Music *musikk;
+	int Rate,Channels,Buffers;
+	Uint16 Format; 
+	Mix_Music *musikk;
   
-public:
-    Audio();
-    ~Audio();
-    void InitOgg(const char[]);
-    void PlayOgg();
-    Uint32 OggPosition();
+ public:
+	Audio();
+	~Audio();
+	void InitOgg(const char[]);
+	void PlayOgg();
+	Uint32 OggPosition();
 };
 
 };

@@ -15,23 +15,24 @@ EffectFactory::EffectFactory()
 
 Effect *EffectFactory::createEffect(const char *name)
 {
-    EffectMap::iterator it;
+	EffectMap::iterator it;
 
-    it = effects.find(name);
-    if (it == effects.end()) {
-	std::cerr << "Warning: Could not find effect \"" << name << "\""
-		  << std::endl;
-	return NULL;
-    }
+	it = effects.find(name);
+	if (it == effects.end()) 
+	{
+		std::cerr << "Warning: Could not find effect \"" 
+			  << name << "\"" << std::endl;
+		return NULL;
+	}
 
-    return it->second->createEffect();
+	return it->second->createEffect();
 }
 
 void EffectFactory::registerEffect(const char *name, EffectCreator *effect)
 {
-    std::cout << "registerEffect: " << name << std::endl;
+	std::cout << "registerEffect: " << name << std::endl;
 
-    effects.insert(EffectMap::value_type(name, effect));
+	effects.insert(EffectMap::value_type(name, effect));
 }
 
 EffectCreator::EffectCreator()

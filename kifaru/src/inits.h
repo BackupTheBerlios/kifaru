@@ -13,11 +13,10 @@ class Init
  private:
  
  public:
-      Init();
-      ~Init();
-      void SDL();
-      void Images();
-      
+	Init();
+	~Init();
+	void SDL();
+	void Images();
 };
 
 };

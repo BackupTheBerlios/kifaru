@@ -145,7 +145,7 @@ void Stream::Render(SDL_Surface* screen)
 		display->format->Bmask,
 		display->format->Amask);
 
-    SDL_BlitSurface(backdrop,0,back,0);	
+	SDL_BlitSurface(backdrop,0,back,0);	
 
 	// create blending surface
 	SDL_Surface* blend = sge_copy_surface(back);
@@ -169,8 +169,8 @@ void Stream::Render(SDL_Surface* screen)
 		pCnt++; 
 	}
 	
-		sge_Blit(blend,display,0,0,0,0,blend->w,blend->h);
-        SDL_FreeSurface(blend);
+	sge_Blit(blend,display,0,0,0,0,blend->w,blend->h);
+	SDL_FreeSurface(blend);
 
 }
 
@@ -186,11 +186,11 @@ bool Stream::Init(AttrMap)
 		return false;
 
 	if(rwop = SDL_RWFromFile("data/solisplanum2.png", "rb"))
-        	backdrop = IMG_LoadPNG_RW(rwop);
+		backdrop = IMG_LoadPNG_RW(rwop);
     	else 
 		return false;
     
-    	this->preScaleParticle(pTexture);
+	this->preScaleParticle(pTexture);
     
 	SDL_FreeSurface(pTexture);
 	
@@ -205,51 +205,52 @@ bool Stream::Init(AttrMap)
 
 void Stream::preScaleParticle(SDL_Surface* pic)
 {
-	Uint32		scaleIt = ZSCALES;
-	Uint32		cnt = 0;
-	float		scale = 1.0;
-	SDL_Surface*	tempSurface;
+	Uint32 scaleIt = ZSCALES;
+	Uint32 cnt = 0;
+	float scale = 1.0;
+	SDL_Surface* tempSurface;
 
 	while(scaleIt)
 	{
+		tempSurface = sge_CreateAlphaSurface(SDL_SWSURFACE, 
+				scaleIt, scaleIt); 
 
-	    tempSurface = sge_CreateAlphaSurface(SDL_SWSURFACE, 
-			    			scaleIt, scaleIt); 
+		scale = (float)(scaleIt / 8) / ZSCALES;
+		sge_transform(pic, tempSurface, 0,
+				scale , scale , 
+				0, 0, 0, 0, 
+				SGE_TAA | SGE_TSAFE);
 
-	    scale = (float)(scaleIt / 8) / ZSCALES;	   
-	    sge_transform(pic, tempSurface, 0, scale , scale , 0, 0, 0, 0, SGE_TAA | SGE_TSAFE);
+		shadeSurface(tempSurface, ZSCALES - scaleIt);
 
-	    shadeSurface(tempSurface, ZSCALES - scaleIt);
+		if(scaleIt < 48)
+			blurSurface(tempSurface,5);
+		if(scaleIt > 64)
+			blurSurface(tempSurface,scaleIt);
 
-	    if(scaleIt < 48)
-	    	blurSurface(tempSurface,5);
-	    if(scaleIt > 64)
-    		blurSurface(tempSurface,scaleIt);
-
-	    scaledParticles[cnt] = tempSurface;
-	    scaledSize[cnt] = scaleIt;
-
-	    scaleIt--;
-	    cnt++;
+		scaledParticles[cnt] = tempSurface;
+		scaledSize[cnt] = scaleIt;
+		scaleIt--;
+		cnt++;
 	}
 }
 
 void Stream::blurSurface(SDL_Surface* pic, int amount)
 {
 	SDL_PixelFormat *fmt;
-	Uint32		rVal, gVal, bVal, aVal;
-	Sint32		xl,yl;
-	Uint32		ld = pic->w;
-	Uint32		lu = -(ld);
-	Uint8		r,g,b;
-	Uint8		r1,g1,b1;
-	Uint8		r2,g2,b2;
-	Uint8		r3,g3,b3;
-	Uint8		r4,g4,b4;
-	Uint8		a,a1,a2,a3,a4;
-	Uint32*		pixels;
-	Uint32*		pixel;
-	Uint32		cnt;
+	Uint32 rVal, gVal, bVal, aVal;
+	Sint32 xl,yl;
+	Uint32 ld = pic->w;
+	Uint32 lu = -(ld);
+	Uint8 r,g,b;
+	Uint8 r1,g1,b1;
+	Uint8 r2,g2,b2;
+	Uint8 r3,g3,b3;
+	Uint8 r4,g4,b4;
+	Uint8 a,a1,a2,a3,a4;
+	Uint32 *pixels;
+	Uint32 *pixel;
+	Uint32 cnt;
 
 	pixels = (Uint32*)pic->pixels;		
 	if(pixels == NULL)
@@ -260,45 +261,42 @@ void Stream::blurSurface(SDL_Surface* pic, int amount)
 
 	while(cnt < amount)
 	{
-	    for(yl=1; yl < pic->h-2; yl++)
-	    {
-		for(xl =1; xl < pic->w-2; xl++)
+		for(yl=1; yl < pic->h-2; yl++)
 		{
-			pixel = pixels + xl + (yl*pic->w);
-			SDL_GetRGBA(*pixel,      fmt, &r,  &g,  &b,  &a);
-			SDL_GetRGBA(pixel[-1],   fmt, &r1, &g1, &b1, &a1);
-			SDL_GetRGBA(pixel[ 1],   fmt, &r2, &g2, &b2, &a2);
-			SDL_GetRGBA(pixel[ld],   fmt, &r3, &g3, &b3, &a3);
-			SDL_GetRGBA(pixel[lu],	 fmt, &r4, &g4, &b4, &a4);
+			for(xl =1; xl < pic->w-2; xl++)
+			{
+				pixel = pixels + xl + (yl*pic->w);
+				SDL_GetRGBA(*pixel,      fmt, &r,  &g,  &b,  &a);
+				SDL_GetRGBA(pixel[-1],   fmt, &r1, &g1, &b1, &a1);
+				SDL_GetRGBA(pixel[ 1],   fmt, &r2, &g2, &b2, &a2);
+				SDL_GetRGBA(pixel[ld],   fmt, &r3, &g3, &b3, &a3);
+				SDL_GetRGBA(pixel[lu],	 fmt, &r4, &g4, &b4, &a4);
 
-			rVal = Uint32((r + r1 + r2 + r3 + r4) / 5.0);
-			gVal = Uint32((g + g1 + g2 + g3 + g4) / 5.0);
-			bVal = Uint32((b + b1 + b2 + b3 + b4) / 5.0);
-			aVal = Uint32((a + a1 + a2 + a3 + a4) / 5.0); 
+				rVal = Uint32((r + r1 + r2 + r3 + r4) / 5.0);
+				gVal = Uint32((g + g1 + g2 + g3 + g4) / 5.0);
+				bVal = Uint32((b + b1 + b2 + b3 + b4) / 5.0);
+				aVal = Uint32((a + a1 + a2 + a3 + a4) / 5.0); 
 
-			r = (Uint8) (rVal < 255 ? rVal : 255);
-			g = (Uint8) (gVal < 255 ? gVal : 255);
-			b = (Uint8) (bVal < 255 ? bVal : 255);
-			a = (Uint8) (aVal < 255 ? aVal : 255);
+				r = (Uint8) (rVal < 255 ? rVal : 255);
+				g = (Uint8) (gVal < 255 ? gVal : 255);
+				b = (Uint8) (bVal < 255 ? bVal : 255);
+				a = (Uint8) (aVal < 255 ? aVal : 255);
 		
-			*pixel = a && (r+g+b) ? SDL_MapRGBA(fmt, r, g, b, a) : 0;
-		    }
-	    }
-
-	   cnt++;
-	}
-	
-			
+				*pixel = a && (r+g+b) ? SDL_MapRGBA(fmt, r, g, b, a) : 0;
+			}
+		}
+		cnt++;
+	}		
 }
 
 void Stream::shadeSurface(SDL_Surface* pic, int amount)
 {
 	SDL_PixelFormat *fmt;
-	Sint32		xl,yl;
-	Uint8		r,g,b,a;
-	Uint32*		pixels;
-	Uint32*		pixel;
-	Uint32		cnt;
+	Sint32 xl,yl;
+	Uint8 r,g,b,a;
+	Uint32* pixels;
+	Uint32* pixel;
+	Uint32 cnt;
 
 	pixels = (Uint32*)pic->pixels;		
 	if(!pixels)
@@ -319,8 +317,8 @@ void Stream::shadeSurface(SDL_Surface* pic, int amount)
 			b = b - amount > 0 ? b - amount : 0;
 	/*hack*/	a = ((r + g + b ) / 3 )- amount > 0 ? ((r + g + b )) / 3 - amount : 0; 
 			*pixel = a ? SDL_MapRGBA(pic->format, r, g, b, a) : 0;
-		 }	
-	cnt++;;
+		}	
+		cnt++;;
 	}
 	
 }			

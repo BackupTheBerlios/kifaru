@@ -6,46 +6,46 @@ namespace ephidrena
 
 void Engine::fastTriangle(const Vertex &v1, const Vertex &v2, const Vertex &v3, SDL_Surface* ws)
 {
-    y1 = v1.y;
-    y2 = v2.y;
-    y3 = v3.y;
+	y1 = v1.y;
+	y2 = v2.y;
+	y3 = v3.y;
 
-    x1 = v1.x;
-    x2 = v2.x;
-    x3 = v3.x;
+	x1 = v1.x;
+	x2 = v2.x;
+	x3 = v3.x;
     
-    int        stride;
-    Uint32*    pixels;
+	int        stride;
+	Uint32*    pixels;
 
-    SDL_LockSurface(ws);
-	pixels = (Uint32*)ws->pixels;		
+    	SDL_LockSurface(ws);
+		pixels = (Uint32*)ws->pixels;		
 	if(pixels == NULL)
               return;
 
-    // Bounding rectangle
-    minx = (int)min(x1, x2, x3);
-    maxx = (int)max(x1, x2, x3);
-    miny = (int)min(y1, y2, y3);
-    maxy = (int)max(y1, y2, y3);
+	// Bounding rectangle
+	minx = (int)min(x1, x2, x3);
+	maxx = (int)max(x1, x2, x3);
+	miny = (int)min(y1, y2, y3);
+	maxy = (int)max(y1, y2, y3);
 
-    (char*&)pixels += miny * stride;
+	(char*&)pixels += miny * stride;
 
-    // Scan through bounding rectangle
-    for(int y = miny; y < maxy; y++)
-    {
-        for(int x = minx; x < maxx; x++)
-        {
-            // When all half-space functions positive, pixel is in triangle
-            if((x1 - x2) * (y - y1) - (y1 - y2) * (x - x1) > 0 &&
-               (x2 - x3) * (y - y2) - (y2 - y3) * (x - x2) > 0 &&
-               (x3 - x1) * (y - y3) - (y3 - y1) * (x - x3) > 0)
-            {
-                pixels[x] = 0x00FFFFFF;   // White
-            }
-        }
+	// Scan through bounding rectangle
+   	for(int y = miny; y < maxy; y++)
+	{
+		for(int x = minx; x < maxx; x++)
+		{
+		// When all half-space functions positive, pixel is in triangle
+			if((x1 - x2) * (y - y1) - (y1 - y2) * (x - x1) > 0 &&
+			(x2 - x3) * (y - y2) - (y2 - y3) * (x - x2) > 0 &&
+			(x3 - x1) * (y - y3) - (y3 - y1) * (x - x3) > 0)
+			{
+				pixels[x] = 0x00FFFFFF;   // White
+			}
+		}
 
-        (char*&)pixels+= stride;
-    }
+		(char*&)pixels+= stride;
+	}
 }
 /*
 void Engine::triangle(const Vertex &v1, const Vertex &v2, const Vertex &v3)
@@ -198,9 +198,9 @@ int* Engine::max(int* v1, int* v2, int* v3)
 */
 float Engine::max(float v1, float v2, float v3)
 {
-     float m = v1 > v2 ? v1 : v2;
-     m = m > v3 ? m : v3;
-     return m;
+	float m = v1 > v2 ? v1 : v2;
+	m = m > v3 ? m : v3;
+	return m;
 }
 
 /*
@@ -213,9 +213,9 @@ int Engine::min(int *v1, int* v2, int* v3)
 */
 float Engine::min(float v1, float v2, float v3)
 {
-     float m = v1 < v2 ? v1 : v2;
-     m = m < v3 ? m : v3;
-     return m;
+	float m = v1 < v2 ? v1 : v2;
+	m = m < v3 ? m : v3;
+	return m;
 }
 
 

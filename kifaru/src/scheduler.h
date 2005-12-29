@@ -8,17 +8,18 @@ class Effect;
 class Scheduler
 {
 private:
-    Effect *root_effect;
+	Effect *root_effect;
 
 public:    
-    Scheduler();
-    ~Scheduler();
+	Scheduler();
+	~Scheduler();
 
-    void EventHandler();
+	void EventHandler();
 
-    void setRoot(Effect *effect) {
-	root_effect = effect;
-    }
+	void setRoot(Effect *effect) 
+	{
+		root_effect = effect;
+	}
 };
 
 };

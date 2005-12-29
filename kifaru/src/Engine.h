@@ -15,8 +15,8 @@ namespace ephidrena
 
 typedef struct Vertex
 {
-        Uint32 x;
-        Uint32 y;
+	Uint32 x;
+	Uint32 y;
 } _V;
         
 
@@ -189,23 +189,20 @@ class Engine
 {
 private:      
         
-        void  fastTriangle(const _V &Vertex, const _V &Vertex, const _V &Vertex, SDL_Surface*);
-        void  triangle(const Vertex, const Vertex, const Vertex);
-        int*  min(int*, int*, int*);
-        float min(float, float, float);
-        int*  max(int*, int*, int*);
-        float max(float, float, float);
-
-    float y1,y2,y3;
-    float x1,x2,x3;
-
-    // Bounding rectangle
-    int minx, maxx, miny,maxy;
+	void  fastTriangle(const _V &Vertex, const _V &Vertex, const _V &Vertex, SDL_Surface*);
+	void  triangle(const Vertex, const Vertex, const Vertex);
+	int*  min(int*, int*, int*);
+	float min(float, float, float);
+	int*  max(int*, int*, int*);
+	float max(float, float, float);
+	float y1,y2,y3;
+	float x1,x2,x3;
+	// Bounding rectangle
+	int minx, maxx, miny,maxy;
 
 public:
-        Engine();
-        ~Engine();
-          
+	Engine();
+	~Engine();
 };
 
 }
