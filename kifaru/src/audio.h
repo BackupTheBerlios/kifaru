@@ -14,7 +14,7 @@ class Audio
  public:
 	Audio();
 	~Audio();
-	void InitOgg(const char[]);
+	void InitOgg(const std::string &filename);
 	void PlayOgg();
 	Uint32 OggPosition();
 };

@@ -6,6 +6,7 @@
 #include "ParticleStream.h"
 #include "ImageProcessing.h"
 #include "tools.h"
+#include "Kifaru.h"
 
 
 namespace ephidrena {
@@ -180,12 +181,12 @@ bool Stream::Init(AttrMap)
 	SDL_RWops *rwop;
 	Uint32 pCnt = 0;
 
-	if(rwop = SDL_RWFromFile("data/alphapartikkel1.png", "rb"))
+	if(rwop = SDL_RWFromFile(Kifaru::instance()->locateDataFile("alphapartikkel1.png").c_str(), "rb"))
 		pTexture = SDL_DisplayFormatAlpha(IMG_LoadPNG_RW(rwop)); 
-    	else
+	else
 		return false;
 
-	if(rwop = SDL_RWFromFile("data/solisplanum2.png", "rb"))
+	if(rwop = SDL_RWFromFile(Kifaru::instance()->locateDataFile("solisplanum2.png").c_str(), "rb"))
 		backdrop = IMG_LoadPNG_RW(rwop);
     	else 
 		return false;
@@ -259,7 +260,7 @@ void Stream::blurSurface(SDL_Surface* pic, int amount)
 	
 	fmt = screen->format;
 
-	while(cnt < amount)
+	for(cnt = 0; cnt < amount; cnt++)
 	{
 		for(yl=1; yl < pic->h-2; yl++)
 		{
@@ -285,7 +286,6 @@ void Stream::blurSurface(SDL_Surface* pic, int amount)
 				*pixel = a && (r+g+b) ? SDL_MapRGBA(fmt, r, g, b, a) : 0;
 			}
 		}
-		cnt++;
 	}		
 }
 

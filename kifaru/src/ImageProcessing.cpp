@@ -8,6 +8,7 @@
 #include "tools.h"
 #include "effect.h"
 #include "ImageProcessing.h"
+#include "Kifaru.h"
 //#include "SDL_rotozoom.h"
 
 using namespace std;
@@ -51,7 +52,7 @@ bool Image::Init(AttrMap attrmap)
  	AttrMap::const_iterator it;
     
 	it = attrmap.find("filename");
-	this->fileName = (char*)it->second.c_str();
+	this->fileName = (char*)Kifaru::instance()->locateDataFile(it->second).c_str();
 	this->LoadPNG();
    
 	it = attrmap.find("xofs");

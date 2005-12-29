@@ -37,7 +37,7 @@ ScriptParser::ScriptParser()
 	InitEnum();
 }
 
-bool ScriptParser::parse(const char *filename, Scheduler *sched)
+bool ScriptParser::parse(const std::string &filename, Scheduler *sched)
 {
 	m_scheduler = sched;
 	TiXmlDocument *script = new TiXmlDocument(filename);

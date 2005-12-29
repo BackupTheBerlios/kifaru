@@ -6,6 +6,7 @@
 #include "timer.h"
 #include "scheduler.h"
 #include "ScriptParser.h"
+#include "Kifaru.h"
 
 using namespace std;
 using namespace ephidrena;
@@ -20,7 +21,7 @@ int main(int argc, char *argv[])
 
 	init.SDL();
     
-	if (!parser.parse("effects.xml", &scheduler))
+	if (!parser.parse(Kifaru::instance()->locateDataFile("effects.xml"), &scheduler))
 	{
 		cerr << "Failed to parse script" << endl;
 		return 1;
@@ -29,12 +30,9 @@ int main(int argc, char *argv[])
         	cerr << "Script parsed OK." << endl;
         
 	timer.Install();
-	audio.InitOgg("data/svart.ogg");
+	audio.InitOgg(Kifaru::instance()->locateDataFile("wireframes.ogg"));
 	audio.PlayOgg();
 	scheduler.EventHandler();
     
 	return 0;
 }
-
-
-

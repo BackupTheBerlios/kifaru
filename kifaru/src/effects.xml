@@ -2,8 +2,8 @@
 
 <demo>
    <sequence>
-   	<effect class="Image" ticks="1500" rotate="180" scale="150" filename="data/rabalder1.png" />
+   	<effect class="Image" ticks="1500" rotate="180" scale="150" filename="rabalder1.png" />
 	<effect class="Stream" ticks="1500" />
-   	<effect class="Image" ticks="1500" rotate="180" scale="150" filename="data/rabalder1.png" />
+   	<effect class="Image" ticks="1500" rotate="180" scale="150" filename="rabalder1.png" />
    </sequence>
 </demo>

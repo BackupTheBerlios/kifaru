@@ -41,7 +41,7 @@ Audio::~Audio()
 }     
               
 
-void Audio::InitOgg(const char filnavn[])
+void Audio::InitOgg(const std::string &filename)
 {
 	Rate = 22050;
 	Format = AUDIO_S16;
@@ -55,7 +55,7 @@ void Audio::InitOgg(const char filnavn[])
 	cerr << Mix_QuerySpec(&Rate, &Format, &Channels);
 #endif
 
-	musikk = Mix_LoadMUS(filnavn);
+	musikk = Mix_LoadMUS(filename.c_str());
 	//Mix_HookMusicFinished(musikkferdig);
 	Mix_Volume(-1,MIX_MAX_VOLUME-(MIX_MAX_VOLUME/10));
 }

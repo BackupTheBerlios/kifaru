@@ -19,7 +19,7 @@ class ScriptParser
 public:
 	ScriptParser();
 
-	bool parse(const char *filename, Scheduler *sched);
+	bool parse(const std::string &filename, Scheduler *sched);
 	bool parseElement(TiXmlNode *elements, CompoundEffect *ce);
 };
 
