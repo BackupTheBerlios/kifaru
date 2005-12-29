@@ -44,7 +44,6 @@ class Effect
 	Uint8 Brightness;
 	Uint8 PostProcessAlpha;
 
-	char* fileName;
 	Uint32 xofs,yofs;
 
 	const char* name() const 

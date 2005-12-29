@@ -21,7 +21,13 @@ namespace ephidrena
 class Kifaru
 {
 public:
-	std::string locateDataFile(const std::string &name);
+	/**
+	 * Locate a data file bundled with the demo.
+	 * @arg name The name of the resource
+	 * @arg path Where to store the full path of the specified resource
+	 * @return true on success, false on error
+	 */
+	bool locateDataFile(const std::string &name, std::string &path);
 	SDL_Surface *loadTexture(const std::string &name);
 	std::ostream &error();
 	

@@ -49,12 +49,24 @@ Image::~Image()
 
 bool Image::Init(AttrMap attrmap)
 {
+	Kifaru *k = Kifaru::instance();
+	SDL_Surface *texture;
  	AttrMap::const_iterator it;
     
 	it = attrmap.find("filename");
-	this->fileName = (char*)Kifaru::instance()->locateDataFile(it->second).c_str();
-	this->LoadPNG();
-   
+	if (it == attrmap.end()) {
+		k->error() << "Image: Texture filename not specified" << std::endl;
+		return false;
+	}
+	
+	texture = k->loadTexture(it->second);
+	if (!texture) {
+		k->error() << "Image: Unable to load texture " << it->second << std::endl;
+		return false;
+	}
+
+	pic = sge_copy_surface(texture);
+
 	it = attrmap.find("xofs");
  	if (it != attrmap.end())
 		this->xofs = str2int(it->second.c_str());
@@ -118,21 +130,5 @@ void Image::Render (SDL_Surface *screen)
 
 	return;
 }
-
-void Image::LoadBMP()
-{
-	this->pic=SDL_LoadBMP(fileName); 
-	cout << "image loaded" << endl;     
-}  
-
-void Image::LoadPNG()
-{
-	SDL_RWops *rwop;
-	rwop = SDL_RWFromFile(fileName, "rb");
-	pic = sge_copy_surface(IMG_LoadPNG_RW(rwop));
-	if (!pic) 
-		cout << "LoadPNG tryna!" << endl;
-}
-
 
 };

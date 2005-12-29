@@ -175,22 +175,35 @@ void Stream::Render(SDL_Surface* screen)
 
 }
 
-bool Stream::Init(AttrMap)
+bool Stream::Init(AttrMap attrmap)
 {
 	SDL_Surface* pTexture;
 	Kifaru *k = Kifaru::instance();
+	AttrMap::const_iterator it;
 	Uint32 pCnt = 0;
 
-	pTexture = k->loadTexture("alphapartikkel1.png");
+	it = attrmap.find("texture");
+	if (it == attrmap.end()) {
+		k->error() << "Stream: Texture attribute unspecified" << std::endl;
+		return false;
+	}
+	
+	pTexture = k->loadTexture(it->second);
 	if (!pTexture) {
-		k->error() << "Stream: Unable to load texture" << std::endl;
+		k->error() << "Stream: Unable to load texture " << it->second << std::endl;
 		return false;
 	}
 	pTexture = SDL_DisplayFormatAlpha(pTexture);
 	
-	backdrop = Kifaru::instance()->loadTexture("solisplanum2.png");
+	it = attrmap.find("backdrop");
+	if (it == attrmap.end()) {
+		k->error() << "Stream: Backdrop attribute unspecified" << std::endl;
+		return false;
+	}
+	
+	backdrop = Kifaru::instance()->loadTexture(it->second);
 	if (!backdrop) {
-		k->error() << "Stream: Unable to load backdrop" << std::endl;
+		k->error() << "Stream: Unable to load backdrop " << it->second << std::endl;
 		return false;
 	}
     

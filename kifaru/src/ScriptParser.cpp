@@ -2,6 +2,7 @@
 #include "CompoundEffect.h"
 #include "EffectFactory.h"
 #include "scheduler.h"
+#include "Kifaru.h"
 #include "tools.h"
 #include <string>
 #include <iostream>
@@ -151,7 +152,10 @@ bool ScriptParser::parseElement(TiXmlNode *elements, CompoundEffect *ce)
 
 		std::cout << " som varer i " << effect->Ticks << " ticks" << std::endl;
 
-		effect->Init(attrmap);
+		if (!effect->Init(attrmap)) {
+			Kifaru::instance()->error() << "Unable to initialize effect " << effect->name() << std::endl;
+			return false;
+		}
 		effect_stack.top()->addEffect(effect);
 		break;
 	}

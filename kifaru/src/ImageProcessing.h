@@ -26,8 +26,6 @@ class Image : public Effect
     ~Image();
     bool Init(AttrMap);
     void Render(SDL_Surface*);
-    void LoadBMP();
-    void LoadPNG();
     SDL_Surface *pic;   
 };
  

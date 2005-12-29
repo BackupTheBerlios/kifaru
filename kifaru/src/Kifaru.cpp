@@ -28,7 +28,7 @@ Kifaru::Kifaru()
 #endif
 }
 
-std::string Kifaru::locateDataFile(const std::string &name)
+bool Kifaru::locateDataFile(const std::string &name, std::string &path)
 {
 #ifdef __APPLE__
 	CFStringRef name_ref, path_ref;
@@ -38,6 +38,8 @@ std::string Kifaru::locateDataFile(const std::string &name)
 	
 	name_ref = CFStringCreateWithCStringNoCopy(NULL, name.c_str(), kCFStringEncodingUTF8, NULL);
 	url = CFBundleCopyResourceURL(main_bundle, name_ref, NULL, NULL);
+	if (!url)
+		return false;
 	path_ref = CFURLCopyFileSystemPath(url, kCFURLPOSIXPathStyle);
 	CFRelease(url);
 	
@@ -49,7 +51,8 @@ std::string Kifaru::locateDataFile(const std::string &name)
 	
 	std::cerr << "Den er her: " << c_path << std::endl;
 	
-	return std::string(c_path);
+	path = std::string(c_path);
+	return true;
 #else
 	std::string path = prefix;
 	
@@ -62,8 +65,11 @@ std::string Kifaru::locateDataFile(const std::string &name)
 
 SDL_Surface *Kifaru::loadTexture(const std::string &name)
 {
-	std::string path = locateDataFile(name);
+	std::string path;
 	SDL_RWops *rwop;
+	
+	if (!locateDataFile(name, path))
+		return NULL;
 	
 	rwop = SDL_RWFromFile(path.c_str(), "rb");
 	if (!rwop)

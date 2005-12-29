@@ -17,20 +17,32 @@ int main(int argc, char *argv[])
 	Audio audio;
 	Timer timer;
 	Scheduler scheduler;
-	ScriptParser parser; 
+	ScriptParser parser;
+	std::string script_path;
+	std::string music_path;
+	Kifaru *k = Kifaru::instance();
 
 	init.SDL();
     
-	if (!parser.parse(Kifaru::instance()->locateDataFile("effects.xml"), &scheduler))
+	if (!k->locateDataFile("effects.xml", script_path)) {
+		k->error() << "Unable to locate effects.xml" << std::endl;
+		return 1;
+	}
+	
+	if (!parser.parse(script_path, &scheduler))
 	{
 		cerr << "Failed to parse script" << endl;
 		return 1;
 	}
 	else
-        	cerr << "Script parsed OK." << endl;
+		cerr << "Script parsed OK." << endl;
         
 	timer.Install();
-	audio.InitOgg(Kifaru::instance()->locateDataFile("wireframes.ogg"));
+	if (!k->locateDataFile("wireframes.ogg", music_path)) {
+		k->error() << "Unable to locate wireframes.ogg" << std::endl;
+		return 1;
+	}
+	audio.InitOgg(music_path);
 	audio.PlayOgg();
 	scheduler.EventHandler();
     
