@@ -6,3 +6,4 @@ kifaru_SOURCES	+= tinyxml.cpp tinystr.cpp tinyxmlerror.cpp tinyxmlparser.cpp
 kifaru_SOURCES	+= Engine.cpp EngineTest.cpp
 kifaru_LDADD	:= -lSDLmain -lSDL -lSDL_mixer -lSGE -lSDL_image 
 kifaru_LDFLAGS	:= -mnocygwin -mcpu=i686 -msse 
+kifaru_CPPFLAGS := -DTIXML_USE_STL
