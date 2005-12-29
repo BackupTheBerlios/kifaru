@@ -178,18 +178,21 @@ void Stream::Render(SDL_Surface* screen)
 bool Stream::Init(AttrMap)
 {
 	SDL_Surface* pTexture;
-	SDL_RWops *rwop;
+	Kifaru *k = Kifaru::instance();
 	Uint32 pCnt = 0;
 
-	if(rwop = SDL_RWFromFile(Kifaru::instance()->locateDataFile("alphapartikkel1.png").c_str(), "rb"))
-		pTexture = SDL_DisplayFormatAlpha(IMG_LoadPNG_RW(rwop)); 
-	else
+	pTexture = k->loadTexture("alphapartikkel1.png");
+	if (!pTexture) {
+		k->error() << "Stream: Unable to load texture" << std::endl;
 		return false;
-
-	if(rwop = SDL_RWFromFile(Kifaru::instance()->locateDataFile("solisplanum2.png").c_str(), "rb"))
-		backdrop = IMG_LoadPNG_RW(rwop);
-    	else 
+	}
+	pTexture = SDL_DisplayFormatAlpha(pTexture);
+	
+	backdrop = Kifaru::instance()->loadTexture("solisplanum2.png");
+	if (!backdrop) {
+		k->error() << "Stream: Unable to load backdrop" << std::endl;
 		return false;
+	}
     
 	this->preScaleParticle(pTexture);
     

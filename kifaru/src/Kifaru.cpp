@@ -10,6 +10,7 @@
 #include "Kifaru.h"
 
 #include <iostream>
+#include <SDL/SDL_image.h>
 
 namespace ephidrena
 {
@@ -57,6 +58,18 @@ std::string Kifaru::locateDataFile(const std::string &name)
 	
 	return path;
 #endif
+}
+
+SDL_Surface *Kifaru::loadTexture(const std::string &name)
+{
+	std::string path = locateDataFile(name);
+	SDL_RWops *rwop;
+	
+	rwop = SDL_RWFromFile(path.c_str(), "rb");
+	if (!rwop)
+		return NULL;
+	
+	return IMG_Load_RW(rwop, true);
 }
 
 std::ostream &Kifaru::error()

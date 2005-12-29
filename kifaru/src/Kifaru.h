@@ -9,6 +9,7 @@
 
 #include <string>
 #include <ostream>
+#include <SDL/SDL.h>
 
 #ifdef __APPLE__
 #include <CFBundle.h>
@@ -21,6 +22,7 @@ class Kifaru
 {
 public:
 	std::string locateDataFile(const std::string &name);
+	SDL_Surface *loadTexture(const std::string &name);
 	std::ostream &error();
 	
 	static Kifaru *instance() {
