@@ -54,12 +54,15 @@ bool Kifaru::locateDataFile(const std::string &name, std::string &path)
 	path = std::string(c_path);
 	return true;
 #else
-	std::string path = prefix;
+	path = prefix;
 	
 	path.append("/data/");
 	path.append(name);
 	
-	return path;
+	if (access(path.c_str(), R_OK))
+		return false;
+	
+	return true;
 #endif
 }
 
