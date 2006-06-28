@@ -1,10 +1,10 @@
 dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.5)
-AC_INIT(kifaru,[0.04],[nerve@multihost.no])
+AC_INIT(kifaru,[0.04],[KareAndersen@gmail.com])
 AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
-AC_CONFIG_SRCDIR(src/effect.h)
+AC_CONFIG_SRCDIR(src/config.h)
 dnl AM_CONFIG_HEADER(src/config.h)
 
 
@@ -23,15 +23,7 @@ AM_PATH_SDL($SDL_VERSION,
 	          AC_MSG_ERROR([*** SDL version $SDL_VERSION not found!]) 
 		  ) 
 		  CXXFLAGS="$CXXFLAGS $SDL_CFLAGS" 
-		  LIBS="$LIBS $SDL_LIBS -lSDL_mixer -lSDL_image -lSDL_gfx -lSGE"
-
-AM_PATH_XML2(0.15.0, :, AC_MSG_ERROR([No suitable version of libxml2 found!]))
-CPPFLAGS="$CPPFLAGS $XML_CPPFLAGS"
-LIBS="$LIBS $XML_LIBS"
-
-PKG_CHECK_MODULES(XMLPP, libxml++-2.6 >= 0.15.0)
-CXXFLAGS="$CXXFLAGS $XMLPP_CFLAGS"
-LIBS="$LIBS $XMLPP_LIBS"
+		  LIBS="$LIBS $SDL_LIBS -lstdc++ -lSDL_mixer -lSDL_image -lSDL_gfx -lSGE"
 
 dnl Checks for header files.
 AC_HEADER_STDC
